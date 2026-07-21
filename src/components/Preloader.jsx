@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { useProgress } from '@react-three/drei';
 
 /**
  * Preloader — clean warp-speed intro, no emojis.
@@ -8,14 +9,28 @@ import { useEffect, useState } from 'react';
  */
 export default function Preloader({ onComplete }) {
   const [done, setDone] = useState(false);
+  const { progress, item, loaded, total } = useProgress();
 
   useEffect(() => {
+    if (progress === 100 && total > 0) {
+      const t = setTimeout(() => {
+        setDone(true);
+        onComplete?.();
+      }, 600); // slight delay after reaching 100%
+      return () => clearTimeout(t);
+    }
+  }, [progress, total, onComplete]);
+
+  // Fallback in case models fail to load or cache skips the 100% event
+  useEffect(() => {
     const t = setTimeout(() => {
-      setDone(true);
-      onComplete?.();
-    }, 2800);
+      if (!done) {
+        setDone(true);
+        onComplete?.();
+      }
+    }, 15000); // max 15 seconds wait
     return () => clearTimeout(t);
-  }, [onComplete]);
+  }, [done, onComplete]);
 
   return (
     <AnimatePresence>
@@ -115,7 +130,7 @@ export default function Preloader({ onComplete }) {
               color: '#f0f0f8',
               marginBottom: 10,
             }}>
-              SIGIN<span style={{ color: 'rgba(34,229,187,0.85)' }}>'26</span>
+              Siginin<span style={{ color: 'rgba(34,229,187,0.85)' }}>'26</span>
             </h1>
             <p style={{
               fontFamily: 'Space Grotesk, sans-serif',
@@ -124,7 +139,7 @@ export default function Preloader({ onComplete }) {
               fontSize: 11,
               textTransform: 'uppercase',
             }}>
-              Interstellar · Initiating
+              {progress < 100 ? `Loading Assets · ${Math.round(progress)}%` : 'Interstellar · Ready'}
             </p>
           </motion.div>
 
@@ -143,9 +158,8 @@ export default function Preloader({ onComplete }) {
           >
             <motion.div
               style={{ height: '100%', background: 'rgba(34,229,187,0.8)', borderRadius: 2 }}
-              initial={{ width: '0%' }}
-              animate={{ width: '100%' }}
-              transition={{ duration: 1.8, delay: 0.5, ease: 'easeInOut' }}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
             />
           </motion.div>
         </motion.div>

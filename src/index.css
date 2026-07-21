@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
 
 /* ============================================================
    DESIGN TOKENS
@@ -52,7 +52,7 @@ body {
   background-color: var(--bg-base);
   color: var(--text-primary);
   overflow-x: hidden;
-  cursor: none;
+  cursor: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -161,7 +161,7 @@ body {
   font-weight: 600;
   font-size: 14px;
   letter-spacing: 0.06em;
-  cursor: none;
+  cursor: pointer;
   transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
 }
 .btn-primary:hover {
@@ -180,7 +180,7 @@ body {
   font-weight: 500;
   font-size: 14px;
   letter-spacing: 0.05em;
-  cursor: none;
+  cursor: pointer;
   transition: border-color 0.25s ease, color 0.25s ease, transform 0.15s ease;
 }
 .btn-ghost:hover {
@@ -236,6 +236,18 @@ body {
   to   { transform: rotate(0deg); }
 }
 
+/* Warp spin — used by coordinator avatar rings */
+@keyframes warp-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Pulse glow — online status dot */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 6px rgba(34,197,94,0.8); }
+  50%       { box-shadow: 0 0 14px rgba(34,197,94,0.4); }
+}
+
 /* Gentle float */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
@@ -246,6 +258,26 @@ body {
 @keyframes nebula-breathe {
   0%, 100% { opacity: 0.25; transform: scale(1); }
   50%       { opacity: 0.45; transform: scale(1.08); }
+}
+
+/* ── Marquee — infinite horizontal scroll, constant speed, no easing ── */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 28s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused; /* pause on hover per spec */
+}
+.marquee-wrapper {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%);
 }
 
 /* Preloader progress */
@@ -363,7 +395,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  cursor: none;
+  cursor: pointer;
   color: var(--accent-bright);
   font-family: 'Space Grotesk', sans-serif;
   font-size: 12px;
@@ -390,7 +422,7 @@ body {
   align-items: center;
   justify-content: center;
   transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
-  cursor: none;
+  cursor: pointer;
   text-decoration: none;
   color: var(--text-secondary);
 }
@@ -407,6 +439,23 @@ body {
 
 @media (max-width: 768px) {
   .hide-mobile { display: none !important; }
+  
+  body {
+    font-size: 14px;
+  }
+  
+  /* Reduce 3D model presence on mobile to save RAM and avoid overlap */
+  .mobile-3d-scale {
+    transform: scale(0.65) translateY(10%) !important;
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 480px) {
+  h2 {
+    font-size: clamp(1.8rem, 8vw, 2.5rem) !important;
+  }
+  .hide-xs { display: none !important; }
 }
 @media (min-width: 769px) {
   .show-mobile { display: none !important; }

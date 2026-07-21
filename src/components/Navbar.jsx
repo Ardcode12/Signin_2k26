@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const NAV_ITEMS = [
-  { id: 'home',          label: 'Home' },
-  { id: 'about',         label: 'About' },
-  { id: 'technical',     label: 'Technical' },
-  { id: 'nontechnical',  label: 'Non-Technical' },
-  { id: 'coordinators',  label: 'Coordinators' },
-  { id: 'contact',       label: 'Contact' },
+  { id: 'home', label: 'Home' },
+  { id: 'about', label: 'About' },
+  { id: 'technical', label: 'Technical' },
+  { id: 'nontechnical', label: 'Non-Technical' },
+  { id: 'coordinators', label: 'Coordinators' },
+  { id: 'contact', label: 'Contact' },
 ];
 
 /**
@@ -17,8 +17,8 @@ const NAV_ITEMS = [
  * No emojis, no rainbow colors.
  */
 export default function Navbar({ activeSection, onNavigate }) {
-  const [scrolled, setScrolled]   = useState(false);
-  const [menuOpen, setMenuOpen]   = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -63,7 +63,7 @@ export default function Navbar({ activeSection, onNavigate }) {
           {/* Logo */}
           <button
             onClick={() => handleNav('home')}
-            style={{ background: 'none', border: 'none', cursor: 'none' }}
+            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
           >
             <motion.div
               whileHover={{ opacity: 0.8 }}
@@ -71,9 +71,9 @@ export default function Navbar({ activeSection, onNavigate }) {
             >
               {/* Minimal geometric mark */}
               <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                <circle cx="14" cy="14" r="13" stroke="rgba(34,229,187,0.5)" strokeWidth="1"/>
-                <circle cx="14" cy="14" r="7" stroke="rgba(34,229,187,0.8)" strokeWidth="1"/>
-                <circle cx="14" cy="14" r="2.5" fill="rgba(34,229,187,0.9)"/>
+                <circle cx="14" cy="14" r="13" stroke="rgba(34,229,187,0.5)" strokeWidth="1" />
+                <circle cx="14" cy="14" r="7" stroke="rgba(34,229,187,0.8)" strokeWidth="1" />
+                <circle cx="14" cy="14" r="2.5" fill="rgba(34,229,187,0.9)" />
               </svg>
               <span style={{
                 fontFamily: 'Orbitron, sans-serif',
@@ -82,7 +82,7 @@ export default function Navbar({ activeSection, onNavigate }) {
                 letterSpacing: '0.08em',
                 color: '#f0f0f8',
               }}>
-                SIGIN<span style={{ color: 'rgba(34,229,187,0.85)' }}>'26</span>
+                Siginin<span style={{ color: 'rgba(34,229,187,0.85)' }}>'26</span>
               </span>
             </motion.div>
           </button>
@@ -99,7 +99,7 @@ export default function Navbar({ activeSection, onNavigate }) {
                   style={{
                     background: 'none',
                     border: 'none',
-                    cursor: 'none',
+                    cursor: 'pointer',
                     padding: '8px 14px',
                     fontFamily: 'Space Grotesk, sans-serif',
                     fontSize: 13,
@@ -137,7 +137,7 @@ export default function Navbar({ activeSection, onNavigate }) {
             style={{
               background: 'none',
               border: 'none',
-              cursor: 'none',
+              cursor: 'pointer',
               padding: 8,
               display: 'flex',
               flexDirection: 'column',
@@ -243,7 +243,7 @@ export default function Navbar({ activeSection, onNavigate }) {
                   textAlign: 'center',
                   textTransform: 'uppercase',
                 }}>
-                  SIGIN'26 · Interstellar
+                  Siginin'26 · Interstellar
                 </p>
               </div>
             </motion.div>
