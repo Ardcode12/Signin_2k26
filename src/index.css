@@ -1,0 +1,413 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+/* ============================================================
+   DESIGN TOKENS
+   Primary palette: deep space navy + electric teal accent
+   No emojis, no multi-color chaos — clean, editorial, premium
+   ============================================================ */
+
+:root {
+  --bg-base:        #04050e;
+  --bg-surface:     #080b1a;
+  --bg-elevated:    #0d1128;
+  --bg-card:        rgba(255,255,255,0.03);
+  --bg-card-hover:  rgba(255,255,255,0.055);
+
+  /* Single accent color — electric teal */
+  --accent:         #00b896;
+  --accent-bright:  #22e5bb;
+  --accent-dim:     rgba(0, 184, 150, 0.18);
+  --accent-border:  rgba(0, 184, 150, 0.28);
+  --accent-glow:    rgba(0, 184, 150, 0.35);
+
+  /* Typography colors */
+  --text-primary:   #f0f0f8;
+  --text-secondary: rgba(240, 240, 248, 0.55);
+  --text-tertiary:  rgba(240, 240, 248, 0.32);
+
+  /* Borders */
+  --border-subtle:  rgba(255, 255, 255, 0.06);
+  --border-mid:     rgba(255, 255, 255, 0.10);
+  --border-strong:  rgba(255, 255, 255, 0.16);
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  cursor: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 2px;
+  opacity: 0.6;
+}
+
+/* ============================================================
+   CUSTOM CURSOR
+   ============================================================ */
+
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent-bright);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  transition: transform 0.04s linear;
+}
+
+.cursor-ring {
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(34, 229, 187, 0.5);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: all 0.10s ease;
+}
+
+/* ============================================================
+   GLASSMORPHISM UTILITIES
+   ============================================================ */
+
+.glass {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid var(--border-mid);
+}
+
+/* ============================================================
+   TYPOGRAPHY HELPERS
+   ============================================================ */
+
+.font-orbitron { font-family: 'Orbitron', sans-serif; }
+.font-space    { font-family: 'Space Grotesk', sans-serif; }
+.font-inter    { font-family: 'Inter', sans-serif; }
+
+/* Single gradient — teal accent */
+.text-gradient {
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-bright) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================
+   SECTION LABEL BADGE
+   ============================================================ */
+
+.section-badge {
+  display: inline-block;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-border);
+  border-radius: 100px;
+  padding: 5px 18px;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.btn-primary {
+  position: relative;
+  background: var(--accent);
+  border: none;
+  border-radius: 6px;
+  padding: 14px 36px;
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  cursor: none;
+  transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
+}
+.btn-primary:hover {
+  background: var(--accent-bright);
+  box-shadow: 0 0 28px var(--accent-glow);
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  padding: 14px 36px;
+  color: var(--text-secondary);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  cursor: none;
+  transition: border-color 0.25s ease, color 0.25s ease, transform 0.15s ease;
+}
+.btn-ghost:hover {
+  border-color: var(--accent-bright);
+  color: var(--text-primary);
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+
+.event-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transform-style: preserve-3d;
+}
+
+.event-card:hover {
+  border-color: var(--accent-border);
+  box-shadow: 0 20px 60px rgba(0, 184, 150, 0.12);
+}
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+
+.hamburger-line {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: var(--text-primary);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+
+/* Slow rotation for decorative rings */
+@keyframes slow-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes slow-spin-rev {
+  from { transform: rotate(360deg); }
+  to   { transform: rotate(0deg); }
+}
+
+/* Gentle float */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-14px); }
+}
+
+/* Nebula blob breathe */
+@keyframes nebula-breathe {
+  0%, 100% { opacity: 0.25; transform: scale(1); }
+  50%       { opacity: 0.45; transform: scale(1.08); }
+}
+
+/* Preloader progress */
+@keyframes progress-fill {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* Warp lines for preloader */
+@keyframes warp-out {
+  0%   { width: 0; opacity: 0.9; }
+  100% { width: 55vw; opacity: 0; }
+}
+
+/* Scan line (very subtle, used sparingly) */
+@keyframes scan {
+  0%   { top: -2px; }
+  100% { top: 100%; }
+}
+
+/* Status pulse */
+@keyframes status-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 184, 150, 0.5); }
+  50%       { box-shadow: 0 0 0 4px rgba(0, 184, 150, 0); }
+}
+
+/* Subtle shimmer on hero title */
+@keyframes shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+.hero-title-shimmer {
+  background: linear-gradient(90deg,
+    #d0f5ee 0%,
+    var(--accent-bright) 30%,
+    #ffffff 50%,
+    var(--accent-bright) 70%,
+    #d0f5ee 100%
+  );
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 6s linear infinite;
+}
+
+/* ============================================================
+   NEBULA BLOBS  (one color only — accent teal)
+   ============================================================ */
+
+.nebula-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  animation: nebula-breathe 8s ease-in-out infinite;
+}
+
+/* ============================================================
+   PRELOADER
+   ============================================================ */
+
+.preloader-overlay {
+  position: fixed;
+  inset: 0;
+  background: #020309;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* ============================================================
+   SECTION DIVIDER
+   ============================================================ */
+
+.section-divider {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--border-mid) 30%,
+    var(--accent-border) 50%,
+    var(--border-mid) 70%,
+    transparent 100%
+  );
+}
+
+/* ============================================================
+   COORDINATOR CARD ACCENT RING
+   ============================================================ */
+
+.coord-ring {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--accent), transparent 60%, var(--accent));
+  animation: slow-spin 6s linear infinite;
+}
+
+/* ============================================================
+   ACCORDION
+   ============================================================ */
+
+.accordion-trigger {
+  width: 100%;
+  background: none;
+  border: none;
+  border-top: 1px solid var(--border-subtle);
+  padding: 13px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: none;
+  color: var(--accent-bright);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background 0.2s ease;
+}
+.accordion-trigger:hover {
+  background: var(--accent-dim);
+}
+
+/* ============================================================
+   SOCIAL ICON BUTTONS
+   ============================================================ */
+
+.social-icon {
+  width: 38px;
+  height: 38px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  cursor: none;
+  text-decoration: none;
+  color: var(--text-secondary);
+}
+.social-icon:hover {
+  border-color: var(--accent-border);
+  background: var(--accent-dim);
+  color: var(--accent-bright);
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   RESPONSIVE HELPERS
+   ============================================================ */
+
+@media (max-width: 768px) {
+  .hide-mobile { display: none !important; }
+}
+@media (min-width: 769px) {
+  .show-mobile { display: none !important; }
+}
