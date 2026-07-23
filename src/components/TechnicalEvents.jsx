@@ -117,7 +117,7 @@ function BigEventCard({ event }) {
         borderRadius: 28,
         overflow: 'hidden',
         position: 'relative',
-        height: 'calc(100vh - 280px)', // Force consistent height for all cards so they stack cleanly
+        height: 'calc(100vh - 200px)', // Force consistent height that reaches the bottom to maintain the stacking illusion
         /* Piano-black depth gradient */
         background: `
           radial-gradient(ellipse at 30% 0%, rgba(255,255,255,0.07) 0%, transparent 55%),
