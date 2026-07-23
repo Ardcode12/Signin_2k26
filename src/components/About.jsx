@@ -134,27 +134,29 @@ export default function About() {
       {/* ── Glowing background nebulas ── */}
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 0, pointerEvents: 'none' }}>
         <motion.div
-          animate={{ y: [0, -22, 0], x: [0, 10, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          animate={{ y: [0, -16, 0], x: [0, 8, 0] }}
+          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
           style={{
             position: 'absolute',
-            width: 700, height: 700,
-            background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)',
+            width: 600, height: 600,
+            background: 'radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%)',
             top: '5%', right: '-10%',
             borderRadius: '50%',
-            filter: 'blur(80px)',
+            filter: 'blur(60px)',
+            willChange: 'transform',
           }}
         />
         <motion.div
-          animate={{ y: [0, 18, 0], x: [0, -8, 0] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+          animate={{ y: [0, 14, 0], x: [0, -6, 0] }}
+          transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
           style={{
             position: 'absolute',
-            width: 420, height: 420,
-            background: 'radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%)',
+            width: 350, height: 350,
+            background: 'radial-gradient(circle, rgba(255,255,255,0.015) 0%, transparent 70%)',
             bottom: '5%', left: '-5%',
             borderRadius: '50%',
-            filter: 'blur(70px)',
+            filter: 'blur(50px)',
+            willChange: 'transform',
           }}
         />
       </div>

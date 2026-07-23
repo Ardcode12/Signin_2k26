@@ -37,7 +37,7 @@ function getBreakpointKey(width) {
 const NAV_HEIGHT = 72;
 const HEADER_HEIGHT = 118;
 const STACK_OFFSET = 48;
-const CARD_DWELL = '55vh';
+const CARD_DWELL = '30vh';
 
 /* Fixed star positions inside event card */
 const STARS = [
@@ -56,7 +56,7 @@ const TECHNICAL_EVENTS = [
     icon: FileText,
     tag: 'TECH · 01',
     num: '01',
-    description: 'Present your research and innovations to a panel of expert judges. Explore the frontiers of science and engineering through rigorous academic discourse.',
+    description: 'Present your innovative ideas, research, and technical solutions before a panel of faculty members. Showcase your knowledge, communication skills, and confidence while defending your concepts through an interactive question-and-answer session. Whether it\'s an emerging technology, a groundbreaking innovation, or a real-world solution, this is your platform to inspire.',
     coordinators: [
       { name: 'Dharun Vidyakar', phone: '8610708272' },
       { name: 'Mithik Karthikeyan', phone: '8220391947' },
@@ -74,21 +74,21 @@ const TECHNICAL_EVENTS = [
       'Round 2 — Two competitive coding problems on HackerRank',
     ],
     coordinators: [
-      { name: 'MohanRaja V', phone: 'TBA' },
-      { name: 'Soundarahari', phone: 'TBA' },
-      { name: 'Arnald', phone: 'TBA' },
+      { name: 'MohanRaja V', phone: '+91 90039 48329' },
+      { name: 'Soundarahari', phone: '+91 94896 69639' },
+      { name: 'Arnald', phone: '+91 90801 76624' },
     ],
   },
   {
-    title: 'Prompt Protocol',
+    title: 'Prompt Design',
     icon: Bot,
     tag: 'TECH · 03',
     num: '03',
-    description: 'Harness the power of AI. Craft the most creative, precise, and effective prompts to solve challenges in this cutting-edge GenAI competition.',
+    description: 'Creativity Meets Artificial Intelligence.Design a visually stunning poster using AI image-generation tools through the power of prompts alone. Participants will be evaluated not only on the final poster but also on the quality, creativity, structure, and level of detail in the prompts used to generate it. Master the art of prompt engineering and let your imagination take center stage.',
     coordinators: [
-      { name: 'Shreyaa', phone: '9842484828' },
-      { name: 'Deepika', phone: 'TBA' },
-      { name: 'Shirustihaa', phone: 'TBA' },
+      { name: 'Shreyaa', phone: '+91 9842484828' },
+      { name: 'Deepika', phone: '+91 63698 09154' },
+      { name: 'Shirustihaa', phone: '+91 84385 85297' },
     ],
   },
 ];
@@ -489,23 +489,25 @@ export default function TechnicalEvents() {
         {/* Subtle white/silver nebula — no green. Wrapped to prevent horizontal scroll bleed */}
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
           <motion.div
-            animate={{ y: [0, -22, 0], x: [0, 10, 0] }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+            animate={{ y: [0, -16, 0], x: [0, 8, 0] }}
+            transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
             style={{
-              position: 'absolute', width: 700, height: 700,
-              background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)',
+              position: 'absolute', width: 600, height: 600,
+              background: 'radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%)',
               top: '5%', right: '-10%', borderRadius: '50%',
-              filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0,
+              filter: 'blur(60px)', pointerEvents: 'none', zIndex: 0,
+              willChange: 'transform',
             }}
           />
           <motion.div
-            animate={{ y: [0, 18, 0], x: [0, -8, 0] }}
-            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+            animate={{ y: [0, 14, 0], x: [0, -6, 0] }}
+            transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
             style={{
-              position: 'absolute', width: 420, height: 420,
-              background: 'radial-gradient(circle, rgba(255,255,255,0.025) 0%, transparent 70%)',
+              position: 'absolute', width: 350, height: 350,
+              background: 'radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%)',
               bottom: '5%', left: '-5%', borderRadius: '50%',
-              filter: 'blur(70px)', pointerEvents: 'none', zIndex: 0,
+              filter: 'blur(50px)', pointerEvents: 'none', zIndex: 0,
+              willChange: 'transform',
             }}
           />
         </div>
@@ -558,8 +560,8 @@ export default function TechnicalEvents() {
 
         {/* ── SCROLLABLE CARDS ── */}
         <div style={{
-          padding: '0 clamp(24px, 5vw, 80px) 30vh',
-          paddingTop: '60vh',
+          padding: '0 clamp(24px, 5vw, 80px) 20vh',
+          paddingTop: '35vh',
           display: 'flex', flexDirection: 'column',
         }}>
           {TECHNICAL_EVENTS.map((event, i) => (
@@ -580,7 +582,7 @@ export default function TechnicalEvents() {
             </div>
           ))}
           {/* Spacer to allow the last card to dwell */}
-          <div style={{ height: '80vh' }} />
+          <div style={{ height: '40vh' }} />
         </div>
       </div>
     </div>

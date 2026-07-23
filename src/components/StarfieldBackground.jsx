@@ -16,8 +16,8 @@ export default function StarfieldBackground() {
     let animId;
     let width, height;
 
-    // Star data
-    const STAR_COUNT = 320;
+    // Reduced star count for better performance on low-end devices
+    const STAR_COUNT = 180;
     const stars = [];
 
     function resize() {
@@ -43,11 +43,18 @@ export default function StarfieldBackground() {
     initStars();
     window.addEventListener('resize', () => { resize(); initStars(); });
 
-    // Mouse parallax (very subtle)
+    // Mouse parallax — throttled via rAF to avoid flooding the main thread
     let mx = 0, my = 0;
+    let pendingMouse = false;
     const onMouse = (e) => {
-      mx = (e.clientX / window.innerWidth - 0.5) * 12;
-      my = (e.clientY / window.innerHeight - 0.5) * 8;
+      if (!pendingMouse) {
+        pendingMouse = true;
+        requestAnimationFrame(() => {
+          mx = (e.clientX / window.innerWidth - 0.5) * 10;
+          my = (e.clientY / window.innerHeight - 0.5) * 6;
+          pendingMouse = false;
+        });
+      }
     };
     window.addEventListener('mousemove', onMouse, { passive: true });
 
@@ -91,7 +98,8 @@ export default function StarfieldBackground() {
         inset: 0,
         zIndex: 0,
         pointerEvents: 'none',
-        opacity: 0.85,
+        opacity: 0.75,
+        willChange: 'transform',
       }}
     />
   );

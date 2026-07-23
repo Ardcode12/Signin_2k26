@@ -2,7 +2,6 @@ import { useState, useCallback, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 
 // Components
-import StarfieldBackground from './components/StarfieldBackground';
 import Preloader from './components/Preloader';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -74,8 +73,6 @@ export default function App() {
         }}
       />
       
-      {/* Layer 0: Animated Starfield Background */}
-      <StarfieldBackground />
 
       {/* Preloader */}
       {!ready && <Preloader onComplete={() => setReady(true)} />}

@@ -64,19 +64,23 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  /* Make scrolling much more sensitive / lighter */
+  scroll-padding-top: 72px;
 }
 
 body {
   /* Enbora for all body text — Fedrin Sambo reserved for main headings */
   font-family: 'Enbora', 'Inter', sans-serif;
-  /* Shiny black base — piano black gradient */
-  background: radial-gradient(ellipse at 20% 10%, #121212 0%, #030303 50%, #000000 100%);
-  background-attachment: fixed;
+  /* Shiny black base — piano black gradient (no fixed attachment for perf) */
+  background: #020309;
   background-color: #020309;
   color: var(--text-primary);
   cursor: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Smooth momentum scrolling on iOS */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }
 
 /* Custom Scrollbar */
@@ -121,16 +125,18 @@ body {
 
 .glass {
   background: var(--bg-card);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-subtle);
+  will-change: transform;
 }
 
 .glass-strong {
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(32px);
-  -webkit-backdrop-filter: blur(32px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border-mid);
+  will-change: transform;
 }
 
 /* ============================================================
@@ -370,6 +376,7 @@ body {
   display: flex;
   width: max-content;
   animation: marquee-scroll 28s linear infinite;
+  will-change: transform;
 }
 .marquee-track:hover {
   animation-play-state: paused;
@@ -432,9 +439,12 @@ body {
 .nebula-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(90px);
+  filter: blur(60px);
   pointer-events: none;
-  animation: nebula-breathe 8s ease-in-out infinite;
+  animation: nebula-breathe 10s ease-in-out infinite;
+  will-change: opacity, transform;
+  /* Promote to GPU layer for smoother animation */
+  transform: translateZ(0);
 }
 
 /* ============================================================

@@ -4,19 +4,19 @@ import { Smile, Shuffle, Sparkles, Users, Phone, ChevronDown } from 'lucide-reac
 
 /* Fixed star positions inside event card */
 const STARS = [
-  { x:  6, y: 12, s: 1.5 }, { x: 22, y: 68, s: 1   },
-  { x: 38, y: 28, s: 2   }, { x: 55, y: 60, s: 1   },
-  { x: 74, y: 14, s: 1.5 }, { x: 89, y: 75, s: 1   },
-  { x: 14, y: 50, s: 1   }, { x: 47, y: 86, s: 1.5 },
-  { x: 63, y: 40, s: 2   }, { x: 92, y: 32, s: 1   },
-  { x: 31, y: 92, s: 1   }, { x: 78, y: 54, s: 1.5 },
-  { x:  4, y: 36, s: 1   }, { x: 96, y: 64, s: 1   },
+  { x: 6, y: 12, s: 1.5 }, { x: 22, y: 68, s: 1 },
+  { x: 38, y: 28, s: 2 }, { x: 55, y: 60, s: 1 },
+  { x: 74, y: 14, s: 1.5 }, { x: 89, y: 75, s: 1 },
+  { x: 14, y: 50, s: 1 }, { x: 47, y: 86, s: 1.5 },
+  { x: 63, y: 40, s: 2 }, { x: 92, y: 32, s: 1 },
+  { x: 31, y: 92, s: 1 }, { x: 78, y: 54, s: 1.5 },
+  { x: 4, y: 36, s: 1 }, { x: 96, y: 64, s: 1 },
 ];
 
 const NAV_HEIGHT = 72;
 const HEADER_HEIGHT = 118;
 const STACK_OFFSET = 48;
-const CARD_DWELL = '55vh';
+const CARD_DWELL = '30vh';
 
 const NON_TECHNICAL_EVENTS = [
   {
@@ -24,11 +24,11 @@ const NON_TECHNICAL_EVENTS = [
     icon: Smile,
     tag: 'FUN · 01',
     num: '01',
-    description: 'Put your acting skills and visual intuition to the test in this hilarious and brain-teasing challenge. Can you decode the cosmos through mime and imagery?',
+    description: 'Actions Speak Louder Than Words.One teammate receives the name of a movie, object, personality, or phrase and must communicate it to the rest of the team using actions and expressions alone—without speaking, writing, or making sounds. The team that guesses the maximum number of clues within the given time emerges victorious. Teamwork, creativity, and quick thinking are the keys to success.',
     coordinators: [
       { name: 'Srimathi', phone: '9715206206' },
       { name: 'DineshKumar', phone: '9345660839' },
-      { name: 'Pavithra', phone: 'TBA' },
+      { name: 'Pavithra', phone: '75388 11389' },
     ],
   },
   {
@@ -36,11 +36,11 @@ const NON_TECHNICAL_EVENTS = [
     icon: Shuffle,
     tag: 'FUN · 02',
     num: '02',
-    description: 'A fast-paced, mind-bending flip-side challenge where quick thinking and adaptability are your greatest superpowers. Flip the script and claim the galaxy!',
+    description: 'A fast-paced one-on-one battle where participants must answer every question with an irrelevant response. The challenge is to avoid giving a relevant answer or repeating any previous response. As the pace intensifies, maintaining composure and thinking unpredictably becomes the ultimate test. The participant who survives the longest without breaking the rules wins.',
     coordinators: [
-      { name: 'Dharanish BM', phone: 'TBA' },
-      { name: 'Manivel Karthick', phone: 'TBA' },
-      { name: 'Dhanursi V', phone: 'TBA' },
+      { name: 'Dharanish BM', phone: '+91 98423 75676' },
+      { name: 'Manivel Karthick', phone: '+91 63804 48154' },
+      { name: 'Dhanursi V', phone: '+91 96291 42271' },
     ],
   },
 ];
@@ -97,7 +97,7 @@ function BigEventCard({ event }) {
             style={{
               position: 'absolute',
               left: `${star.x}%`,
-              top:  `${star.y}%`,
+              top: `${star.y}%`,
               width: star.s,
               height: star.s,
               background: '#fff',
@@ -212,116 +212,116 @@ function BigEventCard({ event }) {
               onClick={() => setOpen(o => !o)}
               style={{
                 display: 'flex', alignItems: 'center', gap: 8,
-              background: open ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.2)',
-              borderRadius: 12, padding: '12px 20px',
-              color: 'rgba(255,255,255,0.75)',
-              fontFamily: 'Enbora', fontSize: 13, fontWeight: 600,
-              cursor: 'pointer', width: '100%',
-              transition: 'all 0.25s ease',
-              letterSpacing: '0.05em',
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.12)';
-              e.currentTarget.style.boxShadow = '0 0 20px rgba(255,255,255,0.08)';
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.background = open ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.04)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-          >
-            <Users size={14} strokeWidth={1.5} />
-            <span style={{ flex: 1, textAlign: 'left' }}>
-              {open ? 'Hide' : 'View'} Coordinators
-            </span>
-            <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.3, ease: 'easeInOut' }}>
-              <ChevronDown size={16} />
-            </motion.span>
-          </button>
+                background: open ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                borderRadius: 12, padding: '12px 20px',
+                color: 'rgba(255,255,255,0.75)',
+                fontFamily: 'Enbora', fontSize: 13, fontWeight: 600,
+                cursor: 'pointer', width: '100%',
+                transition: 'all 0.25s ease',
+                letterSpacing: '0.05em',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.12)';
+                e.currentTarget.style.boxShadow = '0 0 20px rgba(255,255,255,0.08)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = open ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.04)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              <Users size={14} strokeWidth={1.5} />
+              <span style={{ flex: 1, textAlign: 'left' }}>
+                {open ? 'Hide' : 'View'} Coordinators
+              </span>
+              <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.3, ease: 'easeInOut' }}>
+                <ChevronDown size={16} />
+              </motion.span>
+            </button>
 
-          {/* Coordinator list */}
-          <AnimatePresence initial={false}>
-            {open && (
-              <motion.div
-                key="coords"
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.35, ease: 'easeInOut' }}
-                style={{ overflow: 'hidden' }}
-              >
-                <div style={{ paddingTop: 14 }}>
-                  <motion.div
-                    key={coordIdx}
-                    initial={{ opacity: 0, x: 15 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -15 }}
-                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                    style={{
-                      display: 'flex', alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '16px 20px',
-                      background: 'rgba(255,255,255,0.04)',
-                      border: '1px solid rgba(255,255,255,0.14)',
-                      borderRadius: 16,
-                      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.07)',
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                      <div style={{
-                        width: 40, height: 40,
-                        background: 'radial-gradient(circle at 35% 28%, #2a2a2a 0%, #111 30%, #000 100%)',
-                        borderRadius: '50%',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontFamily: 'Orbitron', fontWeight: 800, fontSize: 15,
-                        color: 'rgba(255,255,255,0.85)', flexShrink: 0,
-                        border: '1px solid rgba(255,255,255,0.2)',
-                        boxShadow: 'inset 0 2px 6px rgba(255,255,255,0.1), 0 0 12px rgba(255,255,255,0.08)',
-                      }}>{event.coordinators[coordIdx].name.charAt(0)}</div>
-                      <div>
-                        <span style={{ display: 'block', fontFamily: 'Enbora', fontSize: 15, color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>
-                          {event.coordinators[coordIdx].name}
-                        </span>
-                        <a
-                          href={`tel:${event.coordinators[coordIdx].phone}`}
-                          style={{
-                            display: 'inline-flex', alignItems: 'center', gap: 6,
-                            fontFamily: 'Enbora', fontSize: 13,
-                            color: 'rgba(255,255,255,0.5)', textDecoration: 'none',
-                            marginTop: 4,
-                          }}
-                        >
-                          <Phone size={12} strokeWidth={1.5} /> {event.coordinators[coordIdx].phone}
-                        </a>
+            {/* Coordinator list */}
+            <AnimatePresence initial={false}>
+              {open && (
+                <motion.div
+                  key="coords"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.35, ease: 'easeInOut' }}
+                  style={{ overflow: 'hidden' }}
+                >
+                  <div style={{ paddingTop: 14 }}>
+                    <motion.div
+                      key={coordIdx}
+                      initial={{ opacity: 0, x: 15 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -15 }}
+                      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                      style={{
+                        display: 'flex', alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '16px 20px',
+                        background: 'rgba(255,255,255,0.04)',
+                        border: '1px solid rgba(255,255,255,0.14)',
+                        borderRadius: 16,
+                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.07)',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <div style={{
+                          width: 40, height: 40,
+                          background: 'radial-gradient(circle at 35% 28%, #2a2a2a 0%, #111 30%, #000 100%)',
+                          borderRadius: '50%',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          fontFamily: 'Orbitron', fontWeight: 800, fontSize: 15,
+                          color: 'rgba(255,255,255,0.85)', flexShrink: 0,
+                          border: '1px solid rgba(255,255,255,0.2)',
+                          boxShadow: 'inset 0 2px 6px rgba(255,255,255,0.1), 0 0 12px rgba(255,255,255,0.08)',
+                        }}>{event.coordinators[coordIdx].name.charAt(0)}</div>
+                        <div>
+                          <span style={{ display: 'block', fontFamily: 'Enbora', fontSize: 15, color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>
+                            {event.coordinators[coordIdx].name}
+                          </span>
+                          <a
+                            href={`tel:${event.coordinators[coordIdx].phone}`}
+                            style={{
+                              display: 'inline-flex', alignItems: 'center', gap: 6,
+                              fontFamily: 'Enbora', fontSize: 13,
+                              color: 'rgba(255,255,255,0.5)', textDecoration: 'none',
+                              marginTop: 4,
+                            }}
+                          >
+                            <Phone size={12} strokeWidth={1.5} /> {event.coordinators[coordIdx].phone}
+                          </a>
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Carousel Controls */}
-                    {event.coordinators.length > 1 && (
-                      <div style={{ display: 'flex', gap: 6 }}>
-                        <button onClick={prevCoord} style={{
-                          background: 'rgba(255,255,255,0.06)',
-                          border: '1px solid rgba(255,255,255,0.18)',
-                          borderRadius: '50%', width: 30, height: 30,
-                          color: 'rgba(255,255,255,0.7)', cursor: 'pointer',
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          fontSize: 13,
-                        }}>&lt;</button>
-                        <button onClick={nextCoord} style={{
-                          background: 'rgba(255,255,255,0.06)',
-                          border: '1px solid rgba(255,255,255,0.18)',
-                          borderRadius: '50%', width: 30, height: 30,
-                          color: 'rgba(255,255,255,0.7)', cursor: 'pointer',
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          fontSize: 13,
-                        }}>&gt;</button>
-                      </div>
-                    )}
-                  </motion.div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                      {/* Carousel Controls */}
+                      {event.coordinators.length > 1 && (
+                        <div style={{ display: 'flex', gap: 6 }}>
+                          <button onClick={prevCoord} style={{
+                            background: 'rgba(255,255,255,0.06)',
+                            border: '1px solid rgba(255,255,255,0.18)',
+                            borderRadius: '50%', width: 30, height: 30,
+                            color: 'rgba(255,255,255,0.7)', cursor: 'pointer',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: 13,
+                          }}>&lt;</button>
+                          <button onClick={nextCoord} style={{
+                            background: 'rgba(255,255,255,0.06)',
+                            border: '1px solid rgba(255,255,255,0.18)',
+                            borderRadius: '50%', width: 30, height: 30,
+                            color: 'rgba(255,255,255,0.7)', cursor: 'pointer',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: 13,
+                          }}>&gt;</button>
+                        </div>
+                      )}
+                    </motion.div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
@@ -389,23 +389,25 @@ export default function NonTechnicalEvents() {
         {/* Subtle white nebula blobs — no green */}
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
           <motion.div
-            animate={{ y: [0, -22, 0], x: [0, 10, 0] }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+            animate={{ y: [0, -16, 0], x: [0, 8, 0] }}
+            transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
             style={{
-              position: 'absolute', width: 700, height: 700,
-              background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)',
+              position: 'absolute', width: 600, height: 600,
+              background: 'radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%)',
               top: '5%', right: '-10%', borderRadius: '50%',
-              filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0,
+              filter: 'blur(60px)', pointerEvents: 'none', zIndex: 0,
+              willChange: 'transform',
             }}
           />
           <motion.div
-            animate={{ y: [0, 18, 0], x: [0, -8, 0] }}
-            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+            animate={{ y: [0, 14, 0], x: [0, -6, 0] }}
+            transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
             style={{
-              position: 'absolute', width: 420, height: 420,
-              background: 'radial-gradient(circle, rgba(255,255,255,0.025) 0%, transparent 70%)',
+              position: 'absolute', width: 350, height: 350,
+              background: 'radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%)',
               bottom: '5%', left: '-5%', borderRadius: '50%',
-              filter: 'blur(70px)', pointerEvents: 'none', zIndex: 0,
+              filter: 'blur(50px)', pointerEvents: 'none', zIndex: 0,
+              willChange: 'transform',
             }}
           />
         </div>
@@ -413,7 +415,7 @@ export default function NonTechnicalEvents() {
 
       {/* ── CONTENT (Header + Cards) ── */}
       <div style={{ position: 'relative', zIndex: 1, marginTop: '-100vh' }}>
-        
+
         {/* ── PINNED HEADER ── */}
         <div style={{
           position: 'sticky',
@@ -452,14 +454,14 @@ export default function NonTechnicalEvents() {
             color: '#ffffff',
             textShadow: '0 0 40px rgba(255,255,255,0.15)',
           }}>
-            Fun &amp; Creativity
+            Non Technical Sectors
           </h2>
         </div>
 
         {/* ── SCROLLABLE CARDS ── */}
         <div style={{
-          padding: '0 clamp(24px, 5vw, 80px) 30vh',
-          paddingTop: '60vh',
+          padding: '0 clamp(24px, 5vw, 80px) 20vh',
+          paddingTop: '35vh',
           display: 'flex', flexDirection: 'column',
         }}>
           {NON_TECHNICAL_EVENTS.map((event, i) => (
@@ -480,7 +482,7 @@ export default function NonTechnicalEvents() {
             </div>
           ))}
           {/* Spacer to allow the last card to dwell */}
-          <div style={{ height: '80vh' }} />
+          <div style={{ height: '40vh' }} />
         </div>
       </div>
     </div>
