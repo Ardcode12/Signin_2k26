@@ -91,14 +91,14 @@ export default function ModelCanvas({ path, config, style = {}, fov = 40 }) {
 
   if (!config?.visible) return null;
   
-  // on mobile, we can scale down the model further to fit the screen
-  const mobileScale = isMobile ? config.scale * 0.7 : config.scale;
+  // Merge mobile overrides if they exist
+  const activeConfig = { ...config, ...(isMobile && config.mobile ? config.mobile : {}) };
 
   return (
     <CanvasErrorBoundary>
       <div
         style={{
-          pointerEvents: config?.interactable ? 'auto' : 'none',
+          pointerEvents: activeConfig.interactable ? 'auto' : 'none',
           ...style,
         }}
       >
@@ -113,12 +113,12 @@ export default function ModelCanvas({ path, config, style = {}, fov = 40 }) {
         >
           <ambientLight intensity={0.8} />
           <directionalLight position={[5, 8, 5]} intensity={1.6} color="#ffffff" />
-          <directionalLight position={[-4, -2, -4]} intensity={0.5} color="#22e5bb" />
-          <pointLight position={[0, 4, 2]} intensity={1.0} color="#38bdf8" />
+          <directionalLight position={[-4, -2, -4]} intensity={0.4} color="#aaccff" />
+          <pointLight position={[0, 4, 2]} intensity={0.8} color="#ffffff" />
           <Suspense fallback={null}>
-            <GLBModel path={path} config={{ ...config, scale: mobileScale }} />
+            <GLBModel path={path} config={activeConfig} />
           </Suspense>
-          {config?.interactable && (
+          {activeConfig.interactable && (
             <OrbitControls enableZoom={false} enablePan={false} />
           )}
         </Canvas>

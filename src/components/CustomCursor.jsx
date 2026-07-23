@@ -62,7 +62,7 @@ export default function CustomCursor() {
         ref={dotRef}
         style={{
           width: 6, height: 6,
-          background: 'rgba(34,229,187,0.95)',
+          background: 'rgba(255,255,255,0.9)',
           borderRadius: '50%',
           position: 'fixed',
           pointerEvents: 'none',
@@ -75,7 +75,7 @@ export default function CustomCursor() {
         ref={ringRef}
         style={{
           width: 30, height: 30,
-          border: '1px solid rgba(34,229,187,0.45)',
+          border: '1px solid rgba(255,255,255,0.4)',
           borderRadius: '50%',
           position: 'fixed',
           pointerEvents: 'none',

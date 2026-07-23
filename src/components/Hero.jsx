@@ -12,6 +12,10 @@ const SHIP_CONFIG = {
   visible: true,
   autoRotate: false,
   animate: true,
+  mobile: {
+    scale: 0.28,
+    pos: [0, 0.5, -3],
+  },
 };
 
 /* ── Spec easing: cubic-bezier(0.16, 1, 0.3, 1) ── */
@@ -30,7 +34,6 @@ function useCountUp(target, duration = 1800, inView = false) {
     const step = (ts) => {
       if (!start) start = ts;
       const progress = Math.min((ts - start) / duration, 1);
-      // Ease-out: fast start, slow finish
       const eased = 1 - Math.pow(1 - progress, 3);
       setCount(`${Math.floor(eased * end)}${suffix}`);
       if (progress < 1) requestAnimationFrame(step);
@@ -56,12 +59,13 @@ function StatCounter({ val, label }) {
         fontFamily: 'Orbitron, sans-serif',
         fontSize: 'clamp(1.4rem, 2.5vw, 1.8rem)',
         fontWeight: 800,
-        color: '#22e5bb',
+        color: '#ffffff',
         lineHeight: 1,
         marginBottom: 6,
+        textShadow: '0 0 20px rgba(255,255,255,0.3)',
       }}>{count || val}</div>
       <div style={{
-        fontFamily: 'Space Grotesk, sans-serif',
+        fontFamily: 'Enbora, sans-serif',
         fontSize: 11,
         color: 'rgba(240,240,248,0.35)',
         letterSpacing: '0.22em',
@@ -72,9 +76,7 @@ function StatCounter({ val, label }) {
 }
 
 /**
- * Hero Section — load-in staggered sequence per spec.
- * badge (0.15s) → heading (0.3s) → divider (0.48s) → subtext (0.58s)
- * → buttons (0.72s) → stats (1.0s)
+ * Hero Section — with college logo above title.
  */
 export default function Hero({ onNavigate }) {
   const heroRef = useRef(null);
@@ -95,14 +97,14 @@ export default function Hero({ onNavigate }) {
         padding: '120px clamp(16px, 3vw, 48px) 80px',
       }}
     >
-      {/* ── Floating gradient blobs (continuous loop per spec) ── */}
+      {/* ── Floating gradient blobs — subtle white, no green ── */}
       <motion.div
         animate={{ y: [0, -22, 0], x: [0, 10, 0] }}
         transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
         style={{
           position: 'absolute',
           width: 700, height: 700,
-          background: 'radial-gradient(circle, rgba(0,184,150,0.15) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)',
           top: '5%', right: '-10%',
           borderRadius: '50%',
           filter: 'blur(80px)',
@@ -115,7 +117,7 @@ export default function Hero({ onNavigate }) {
         style={{
           position: 'absolute',
           width: 420, height: 420,
-          background: 'radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(255,255,255,0.025) 0%, transparent 70%)',
           bottom: '5%', left: '-5%',
           borderRadius: '50%',
           filter: 'blur(70px)',
@@ -132,35 +134,60 @@ export default function Hero({ onNavigate }) {
         {/* LEFT: staggered entrance sequence */}
         <motion.div style={{ flex: '1 1 300px', maxWidth: 640, position: 'relative', zIndex: 2, y: parallaxY }}>
 
+          {/* College Logo — Top of Hero */}
+          <motion.div
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.6, ease: EASE }}
+            style={{ marginBottom: 20, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 12 }}
+          >
+            <div style={{
+              height: 90,
+              width: 'auto',
+              maxWidth: '100%',
+              flexShrink: 0,
+              display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start',
+            }}>
+              <img
+                src="/images/clg_logo.png"
+                alt="College Logo"
+                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                onError={e => { e.currentTarget.style.display = 'none'; }}
+              />
+            </div>
+
+          </motion.div>
+
           {/* 1. Badge — first to enter */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, duration: 0.5, ease: EASE }}
-            style={{ marginBottom: 28 }}
+            style={{ marginBottom: 16 }}
           >
-            <span className="section-badge">Interstellar Theme &nbsp;·&nbsp; Tech Fest 2026</span>
+            <span className="section-badge">Department of Information Technology</span>
           </motion.div>
 
-          {/* 2. Main heading */}
+          {/* 2. Main heading — Fedrin Sambo font */}
           <motion.h1
             initial={{ opacity: 0, y: 35 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.8, ease: EASE }}
             style={{
-              fontFamily: 'Orbitron, sans-serif',
+              fontFamily: "'Fedrin Sambo', 'Orbitron', sans-serif",
               fontSize: 'clamp(3.8rem, 10vw, 8.5rem)',
               fontWeight: 900,
               letterSpacing: '-0.02em',
               lineHeight: 0.92,
-              marginBottom: 24,
+              marginBottom: 12,
               color: '#f0f0f8',
             }}
           >
             <span className="hero-title-shimmer">Siginin</span>
             <br />
-            <span style={{ color: 'rgba(34,229,187,0.82)', fontWeight: 800 }}>'26</span>
+            <span style={{ color: 'rgba(255,255,255,0.55)', fontWeight: 800 }}>'26</span>
           </motion.h1>
+
 
           {/* Divider line */}
           <motion.div
@@ -169,8 +196,8 @@ export default function Hero({ onNavigate }) {
             transition={{ delay: 0.48, duration: 0.6, ease: 'easeOut' }}
             style={{
               width: 60, height: 1.5,
-              background: 'linear-gradient(90deg, rgba(34,229,187,0.8), rgba(34,229,187,0.2))',
-              marginBottom: 24,
+              background: 'linear-gradient(90deg, rgba(255,255,255,0.5), rgba(255,255,255,0.1))',
+              marginBottom: 16,
               transformOrigin: 'left',
               borderRadius: 2,
             }}
@@ -182,12 +209,12 @@ export default function Hero({ onNavigate }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.58, duration: 0.7, ease: EASE }}
             style={{
-              fontFamily: 'Space Grotesk, sans-serif',
+              fontFamily: 'Enbora, sans-serif',
               fontSize: 'clamp(1.05rem, 2.2vw, 1.3rem)',
               fontWeight: 300,
               color: 'rgba(240,240,248,0.7)',
               lineHeight: 1.7,
-              marginBottom: 48,
+              marginBottom: 28,
               maxWidth: 480,
             }}
           >
@@ -207,7 +234,7 @@ export default function Hero({ onNavigate }) {
             <motion.button
               className="btn-primary"
               onClick={() => onNavigate('technical')}
-              whileHover={{ scale: 1.05, boxShadow: '0 0 32px rgba(0,184,150,0.45)' }}
+              whileHover={{ scale: 1.05, boxShadow: '0 0 32px rgba(255,255,255,0.2)' }}
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
             >
@@ -216,7 +243,7 @@ export default function Hero({ onNavigate }) {
             <motion.button
               className="btn-ghost"
               onClick={() => onNavigate('about')}
-              whileHover={{ scale: 1.05, borderColor: 'rgba(34,229,187,0.5)' }}
+              whileHover={{ scale: 1.05, borderColor: 'rgba(255,255,255,0.4)' }}
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
             >
@@ -224,26 +251,7 @@ export default function Hero({ onNavigate }) {
             </motion.button>
           </motion.div>
 
-          {/* 5. Stats — count-up when visible (once) */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.0, duration: 0.7 }}
-            style={{
-              display: 'flex', gap: 40,
-              marginTop: 64, paddingTop: 32,
-              borderTop: '1px solid rgba(255,255,255,0.07)',
-              flexWrap: 'wrap',
-            }}
-          >
-            {[
-              { val: '5+', label: 'Events' },
-              { val: '2', label: 'Tracks' },
-              { val: "'26", label: 'Edition' },
-            ].map(({ val, label }) => (
-              <StatCounter key={label} val={val} label={label} />
-            ))}
-          </motion.div>
+
         </motion.div>
 
         {/* RIGHT: 3D Ship */}
@@ -266,7 +274,7 @@ export default function Hero({ onNavigate }) {
         }}
       >
         <span style={{
-          fontFamily: 'Space Grotesk', fontSize: 9,
+          fontFamily: 'Enbora', fontSize: 9,
           letterSpacing: '0.35em', color: 'rgba(240,240,248,0.25)',
           textTransform: 'uppercase',
         }}>Scroll</span>
@@ -280,7 +288,7 @@ export default function Hero({ onNavigate }) {
             display: 'flex', justifyContent: 'center', paddingTop: 5,
           }}
         >
-          <div style={{ width: 2, height: 6, background: 'rgba(34,229,187,0.6)', borderRadius: 2 }} />
+          <div style={{ width: 2, height: 6, background: 'rgba(255,255,255,0.4)', borderRadius: 2 }} />
         </motion.div>
       </motion.div>
     </motion.section>

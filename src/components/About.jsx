@@ -65,7 +65,7 @@ export default function About() {
         style={{
           position: 'absolute',
           width: 700, height: 700,
-          background: 'radial-gradient(circle, rgba(0,184,150,0.15) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)',
           top: '5%', right: '-10%',
           borderRadius: '50%',
           filter: 'blur(80px)',
@@ -79,7 +79,7 @@ export default function About() {
         style={{
           position: 'absolute',
           width: 420, height: 420,
-          background: 'radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%)',
           bottom: '5%', left: '-5%',
           borderRadius: '50%',
           filter: 'blur(70px)',
@@ -132,14 +132,14 @@ export default function About() {
               style={{ marginBottom: 24 }}
             >
               <span style={{
-                fontFamily: 'Space Grotesk',
+                fontFamily: 'Enbora',
                 fontSize: 10,
                 fontWeight: 600,
                 letterSpacing: '0.45em',
                 textTransform: 'uppercase',
-                color: '#38bdf8',
-                background: 'rgba(56,189,248,0.12)',
-                border: '1px solid rgba(56,189,248,0.3)',
+                color: 'rgba(255,255,255,0.75)',
+                background: 'rgba(255,255,255,0.07)',
+                border: '1px solid rgba(255,255,255,0.18)',
                 borderRadius: 100,
                 padding: '5px 18px',
                 display: 'inline-block',
@@ -153,12 +153,12 @@ export default function About() {
               variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } } }}
             >
               <p style={{
-                fontFamily: 'Space Grotesk',
+                fontFamily: 'Enbora',
                 fontSize: 'clamp(0.75rem, 1.2vw, 0.9rem)',
                 fontWeight: 500,
                 letterSpacing: '0.3em',
                 textTransform: 'uppercase',
-                color: 'rgba(56,189,248,0.7)',
+                color: 'rgba(255,255,255,0.4)',
                 marginBottom: 8,
               }}>
                 SIGININ'26 — ANNUAL SYMPOSIUM
@@ -176,15 +176,13 @@ export default function About() {
               </h2>
               <h2 style={{
                 fontFamily: 'Orbitron, sans-serif',
-                fontSize: 'clamp(2rem, 4.5vw, 3.2rem)', /* reduced size */
+                fontSize: 'clamp(2rem, 4.5vw, 3.2rem)',
                 fontWeight: 900,
                 lineHeight: 1.08,
-                marginBottom: 20, /* reduced margin */
+                marginBottom: 20,
                 letterSpacing: '-0.02em',
-                background: 'linear-gradient(90deg, #38bdf8, #00b896)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
+                color: '#ffffff',
+                textShadow: '0 0 40px rgba(255,255,255,0.15)',
               }}>
                 Meets the Cosmos
               </h2>
@@ -193,7 +191,7 @@ export default function About() {
             <motion.p
               variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.1 } } }}
               style={{
-                fontFamily: 'Inter',
+                fontFamily: 'Enbora',
                 fontSize: 'clamp(0.95rem, 1.5vw, 1.05rem)', /* slightly smaller */
                 lineHeight: 1.8,
                 color: 'rgba(240,240,248,0.6)',
@@ -201,8 +199,8 @@ export default function About() {
                 maxWidth: 480,
               }}
             >
-              <strong style={{ color: 'rgba(240,240,248,0.95)', fontFamily: 'Space Grotesk', fontWeight: 600 }}>Siginin'26</strong> is the annual intercollegiate symposium, reborn under an{' '}
-              <em style={{ color: '#38bdf8', fontStyle: 'normal', fontWeight: 500 }}>Interstellar</em> theme — an odyssey through innovation, creativity, and intellect.
+              <strong style={{ color: 'rgba(240,240,248,0.95)', fontFamily: 'Enbora', fontWeight: 600 }}>Siginin'26</strong> is the annual intercollegiate symposium, reborn under an{' '}
+              <em style={{ color: 'rgba(255,255,255,0.85)', fontStyle: 'normal', fontWeight: 500 }}>Interstellar</em> theme — an odyssey through innovation, creativity, and intellect.
             </motion.p>
             {/* Second paragraph removed to fit on page nicely */}
           </div>
@@ -213,11 +211,11 @@ export default function About() {
               <motion.div
                 key={label}
                 variants={{ hidden: { opacity: 0, x: 30 }, visible: { opacity: 1, x: 0, transition: { duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] } } }}
-                whileHover={{ borderColor: 'rgba(56,189,248,0.4)', boxShadow: '0 8px 40px rgba(56,189,248,0.15)', x: 4 }}
+                whileHover={{ borderColor: 'rgba(255,255,255,0.25)', boxShadow: '0 8px 40px rgba(255,255,255,0.08)', x: 4 }}
                 style={{
-                  background: 'rgba(56,189,248,0.06)',
+                  background: 'rgba(255,255,255,0.04)',
                   backdropFilter: 'blur(16px)',
-                  border: '1px solid rgba(56,189,248,0.18)',
+                  border: '1px solid rgba(255,255,255,0.1)',
                   borderRadius: 16,
                   padding: '16px 24px', /* reduced padding to fit vertically */
                   display: 'flex', gap: 18, alignItems: 'center', /* center align for smaller height */
@@ -227,17 +225,17 @@ export default function About() {
                 <div style={{
                   flexShrink: 0,
                   width: 42, height: 42, /* slightly smaller icon box */
-                  background: 'rgba(56,189,248,0.12)',
-                  border: '1px solid rgba(56,189,248,0.25)',
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.15)',
                   borderRadius: 12,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: '#38bdf8',
+                  color: 'rgba(255,255,255,0.7)',
                 }}>
                   {icon}
                 </div>
                 <div>
                   <h3 style={{
-                    fontFamily: 'Space Grotesk',
+                    fontFamily: 'Enbora',
                     fontWeight: 700,
                     fontSize: 'clamp(0.95rem, 1.5vw, 1.05rem)',
                     color: '#f0f0f8',
@@ -245,7 +243,7 @@ export default function About() {
                     letterSpacing: '-0.01em',
                   }}>{label}</h3>
                   <p style={{
-                    fontFamily: 'Inter',
+                    fontFamily: 'Enbora',
                     fontSize: 12, /* slightly smaller font to fit well */
                     color: 'rgba(240,240,248,0.48)',
                     lineHeight: 1.5,

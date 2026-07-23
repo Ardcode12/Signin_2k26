@@ -12,9 +12,9 @@ import { Settings2, ChevronDown, ChevronUp, RotateCcw } from 'lucide-react';
  */
 
 const MODEL_META = {
-  ship:      { label: 'Jet · Hero',       color: '#22e5bb' },
-  man:       { label: 'Astronaut · Hero', color: '#38bdf8' },
-  blackhole: { label: 'Blackhole · Events', color: '#f59e0b' },
+  ship:      { label: 'Jet · Hero',         color: 'rgba(255,255,255,0.7)' },
+  man:       { label: 'Astronaut · About',   color: 'rgba(255,255,255,0.55)' },
+  blackhole: { label: 'Blackhole · Events',  color: 'rgba(255,255,255,0.4)' },
 };
 
 const DEFAULTS = {
@@ -27,7 +27,7 @@ function SliderRow({ label, value, min, max, step = 0.01, onChange }) {
   return (
     <div style={{ marginBottom: 8 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
-        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)', fontFamily: 'Space Grotesk', letterSpacing: '0.05em' }}>
+        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)', fontFamily: 'Enbora', letterSpacing: '0.05em' }}>
           {label}
         </span>
         <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.6)', fontFamily: 'Orbitron', fontWeight: 600 }}>
@@ -39,7 +39,7 @@ function SliderRow({ label, value, min, max, step = 0.01, onChange }) {
         onChange={e => onChange(parseFloat(e.target.value))}
         style={{
           width: '100%',
-          accentColor: '#22e5bb',
+          accentColor: 'rgba(255,255,255,0.7)',
           height: 2,
           cursor: 'pointer',
         }}
@@ -76,7 +76,7 @@ function ModelSection({ modelKey, cfg, onChange, meta }) {
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ width: 8, height: 8, borderRadius: '50%', background: meta.color, boxShadow: `0 0 6px ${meta.color}` }} />
-          <span style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em' }}>
+          <span style={{ fontFamily: 'Enbora', fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em' }}>
             {meta.label}
           </span>
         </div>
@@ -171,15 +171,15 @@ export default function ModelConfigPanel({ configs, onChange }) {
           display: 'flex',
           alignItems: 'center',
           gap: 8,
-          background: panelOpen ? 'rgba(0,184,150,0.2)' : 'rgba(8,11,26,0.85)',
-          border: `1px solid ${panelOpen ? 'rgba(34,229,187,0.5)' : 'rgba(255,255,255,0.1)'}`,
+          background: panelOpen ? 'rgba(255,255,255,0.1)' : 'rgba(8,11,26,0.85)',
+          border: `1px solid ${panelOpen ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.1)'}`,
           borderRadius: 10,
           padding: '8px 14px',
           cursor: 'pointer',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
-          color: panelOpen ? '#22e5bb' : 'rgba(255,255,255,0.7)',
-          fontFamily: 'Space Grotesk, sans-serif',
+          color: panelOpen ? '#ffffff' : 'rgba(255,255,255,0.7)',
+          fontFamily: 'Enbora, sans-serif',
           fontSize: 12,
           fontWeight: 600,
           letterSpacing: '0.06em',

@@ -109,14 +109,14 @@ function SectionDivider() {
       maxWidth: 1100,
       margin: '0 auto',
     }}>
-      <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, transparent, rgba(0,184,150,0.2), transparent)' }} />
+      <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent)' }} />
       <div style={{
-        width: 6, height: 6,
-        background: 'rgba(34,229,187,0.6)',
+        width: 5, height: 5,
+        background: 'rgba(255,255,255,0.35)',
         borderRadius: '50%',
-        boxShadow: '0 0 8px rgba(34,229,187,0.6)',
+        boxShadow: '0 0 8px rgba(255,255,255,0.3)',
       }} />
-      <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, transparent, rgba(0,184,150,0.2), transparent)' }} />
+      <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent)' }} />
     </div>
   );
 }

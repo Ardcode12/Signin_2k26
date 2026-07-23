@@ -2,9 +2,9 @@ import { motion } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
 
 const CONTACTS = [
-  { name: 'Mohammed Yunus', phone: '7010499316', role: 'Overall Coordinator', color: '#38bdf8' },
-  { name: 'Dharun Vidyakar', phone: '8610708272', role: 'Overall Coordinator', color: '#00b896' },
-  { name: 'Shreyaa', phone: '9842484828', role: 'Overall Coordinator', color: '#38bdf8' },
+  { name: 'Mohammed Yunus', phone: '7010499316', role: 'Overall Coordinator' },
+  { name: 'Dharun Vidyakar', phone: '8610708272', role: 'Overall Coordinator' },
+  { name: 'Shreyaa', phone: '9842484828', role: 'Overall Coordinator' },
 ];
 
 const SOCIALS = [
@@ -93,7 +93,7 @@ export default function Footer({ onNavigate }) {
         style={{
           position: 'absolute',
           width: 700, height: 700,
-          background: 'radial-gradient(circle, rgba(0,184,150,0.15) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)',
           top: '5%', right: '-10%',
           borderRadius: '50%',
           filter: 'blur(80px)',
@@ -107,7 +107,7 @@ export default function Footer({ onNavigate }) {
         style={{
           position: 'absolute',
           width: 420, height: 420,
-          background: 'radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%)',
           bottom: '5%', left: '-5%',
           borderRadius: '50%',
           filter: 'blur(70px)',
@@ -128,29 +128,26 @@ export default function Footer({ onNavigate }) {
           <motion.div variants={itemVariants}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
               <div style={{
-                width: 44, height: 44,
-                background: 'conic-gradient(from 0deg, #00b896, #38bdf8, #00b896, #38bdf8, #00b896)',
+                width: 48, height: 48,
+                background: '#000',
                 borderRadius: '50%',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 20,
-                animation: 'warp-spin 4s linear infinite',
+                overflow: 'hidden',
+                border: '1px solid rgba(255,255,255,0.2)',
+                boxShadow: '0 0 15px rgba(255,255,255,0.1)',
               }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="rgba(34,229,187,0.7)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <img src="/images/dept_logo.jpg" alt="Dept Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               <span style={{
                 fontFamily: 'Orbitron, sans-serif',
                 fontWeight: 900,
                 fontSize: 22,
-                background: 'linear-gradient(135deg, #38bdf8, #22e5bb)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
+                color: '#ffffff',
+                textShadow: '0 0 20px rgba(255,255,255,0.2)',
               }}>Siginin'26</span>
             </div>
             <p style={{
-              fontFamily: 'Inter',
+              fontFamily: 'Enbora',
               fontSize: 14,
               color: 'rgba(255,255,255,0.45)',
               lineHeight: 1.8,
@@ -179,7 +176,7 @@ export default function Footer({ onNavigate }) {
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,184,150,0.2)'; e.currentTarget.style.borderColor = 'rgba(0,184,150,0.4)'; e.currentTarget.style.color = '#22e5bb'; }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)'; e.currentTarget.style.color = '#ffffff'; }}
                   onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = 'rgba(255,255,255,0.5)'; }}
                 >
                   {s.icon}
@@ -191,7 +188,7 @@ export default function Footer({ onNavigate }) {
           {/* Quick nav */}
           <motion.div variants={itemVariants}>
             <h4 style={{
-              fontFamily: 'Space Grotesk',
+              fontFamily: 'Enbora',
               fontWeight: 700,
               fontSize: 14,
               letterSpacing: '0.2em',
@@ -203,13 +200,13 @@ export default function Footer({ onNavigate }) {
               <motion.button
                 key={id}
                 onClick={() => onNavigate(id)}
-                whileHover={{ x: 6, color: '#38bdf8' }}
+                whileHover={{ x: 6, color: 'rgba(255,255,255,0.9)' }}
                 style={{
                   display: 'block',
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
-                  fontFamily: 'Inter',
+                  fontFamily: 'Enbora',
                   fontSize: 14,
                   color: 'rgba(255,255,255,0.55)',
                   marginBottom: 10,
@@ -227,7 +224,7 @@ export default function Footer({ onNavigate }) {
           {/* Contact info */}
           <motion.div variants={itemVariants}>
             <h4 style={{
-              fontFamily: 'Space Grotesk',
+              fontFamily: 'Enbora',
               fontWeight: 700,
               fontSize: 14,
               letterSpacing: '0.2em',
@@ -248,26 +245,26 @@ export default function Footer({ onNavigate }) {
               }}>
                 <div style={{
                   width: 36, height: 36,
-                  background: `${c.color}22`,
-                  border: `1px solid ${c.color}44`,
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.16)',
                   borderRadius: 10,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontFamily: 'Orbitron',
                   fontWeight: 800,
                   fontSize: 13,
-                  color: c.color,
+                  color: 'rgba(255,255,255,0.7)',
                   flexShrink: 0,
                 }}>
                   {c.name.charAt(0)}
                 </div>
                 <div>
-                  <div style={{ fontFamily: 'Space Grotesk', fontSize: 13, color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>
+                  <div style={{ fontFamily: 'Enbora', fontSize: 13, color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>
                     {c.name}
                   </div>
                   <a href={`tel:${c.phone}`} style={{
-                    fontFamily: 'Inter',
+                    fontFamily: 'Enbora',
                     fontSize: 12,
-                    color: c.color,
+                    color: 'rgba(255,255,255,0.45)',
                     textDecoration: 'none',
                     cursor: 'pointer',
                   }}>
@@ -293,7 +290,7 @@ export default function Footer({ onNavigate }) {
           }}
         >
           <p style={{
-            fontFamily: 'Inter',
+            fontFamily: 'Enbora',
             fontSize: 13,
             color: 'rgba(255,255,255,0.3)',
           }}>
@@ -302,7 +299,7 @@ export default function Footer({ onNavigate }) {
 
           {/* Closing space tagline */}
           <p style={{
-            fontFamily: 'Space Grotesk',
+            fontFamily: 'Enbora',
             fontSize: 13,
             color: 'rgba(255,255,255,0.3)',
             fontStyle: 'italic',

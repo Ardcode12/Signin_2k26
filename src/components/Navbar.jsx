@@ -69,12 +69,16 @@ export default function Navbar({ activeSection, onNavigate }) {
               whileHover={{ opacity: 0.8 }}
               style={{ display: 'flex', alignItems: 'center', gap: 10 }}
             >
-              {/* Minimal geometric mark */}
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                <circle cx="14" cy="14" r="13" stroke="rgba(34,229,187,0.5)" strokeWidth="1" />
-                <circle cx="14" cy="14" r="7" stroke="rgba(34,229,187,0.8)" strokeWidth="1" />
-                <circle cx="14" cy="14" r="2.5" fill="rgba(34,229,187,0.9)" />
-              </svg>
+              {/* Department Logo */}
+              <div style={{
+                width: 32, height: 32, borderRadius: '50%', overflow: 'hidden',
+                border: '1px solid rgba(255,255,255,0.2)',
+                boxShadow: '0 0 10px rgba(255,255,255,0.1)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: '#000',
+              }}>
+                <img src="/images/dept_logo.jpg" alt="Dept Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
               <span style={{
                 fontFamily: 'Orbitron, sans-serif',
                 fontWeight: 800,
@@ -82,7 +86,7 @@ export default function Navbar({ activeSection, onNavigate }) {
                 letterSpacing: '0.08em',
                 color: '#f0f0f8',
               }}>
-                Siginin<span style={{ color: 'rgba(34,229,187,0.85)' }}>'26</span>
+                Siginin<span style={{ color: 'rgba(255,255,255,0.45)' }}>'26</span>
               </span>
             </motion.div>
           </button>
@@ -101,7 +105,7 @@ export default function Navbar({ activeSection, onNavigate }) {
                     border: 'none',
                     cursor: 'pointer',
                     padding: '8px 14px',
-                    fontFamily: 'Space Grotesk, sans-serif',
+                    fontFamily: 'Enbora, sans-serif',
                     fontSize: 13,
                     fontWeight: isActive ? 600 : 400,
                     color: isActive ? '#f0f0f8' : 'rgba(240,240,248,0.5)',
@@ -120,7 +124,7 @@ export default function Navbar({ activeSection, onNavigate }) {
                         left: '18%',
                         width: '64%',
                         height: '1.5px',
-                        background: 'rgba(34,229,187,0.85)',
+                        background: 'rgba(255,255,255,0.7)',
                         borderRadius: 2,
                       }}
                     />
@@ -208,17 +212,17 @@ export default function Navbar({ activeSection, onNavigate }) {
                   onClick={() => handleNav(item.id)}
                   style={{
                     background: activeSection === item.id
-                      ? 'rgba(0,184,150,0.12)'
+                      ? 'rgba(255,255,255,0.08)'
                       : 'transparent',
                     border: activeSection === item.id
-                      ? '1px solid rgba(0,184,150,0.3)'
+                      ? '1px solid rgba(255,255,255,0.2)'
                       : '1px solid transparent',
                     borderRadius: 8,
                     padding: '13px 18px',
                     color: activeSection === item.id
-                      ? 'rgba(34,229,187,0.95)'
+                      ? 'rgba(255,255,255,0.95)'
                       : 'rgba(240,240,248,0.7)',
-                    fontFamily: 'Space Grotesk, sans-serif',
+                    fontFamily: 'Enbora, sans-serif',
                     fontSize: 15,
                     fontWeight: activeSection === item.id ? 600 : 400,
                     textAlign: 'left',

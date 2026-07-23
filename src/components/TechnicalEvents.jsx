@@ -4,16 +4,37 @@ import { FileText, Code2, Bot, Sparkles, Users, Phone, ChevronDown } from 'lucid
 
 const ModelCanvas = lazy(() => import('./ModelCanvas'));
 
-const BLACKHOLE_CONFIG = { pos: [4, 0, -3], rot: [0.3, 0, 0], scale: 1.5, speed: 0.6, visible: true };
+const BLACKHOLE_CONFIG = {
+  pos: [4, 0, -3],
+  rot: [0.3, 0, 0],
+  scale: 1.5,
+  speed: 0.6,
+  visible: true,
+  mobile: {
+    pos: [0, -2, -3],
+    scale: 1.05,
+  }
+};
 
 const NAV_HEIGHT = 72;
 const HEADER_HEIGHT = 118;
 const STACK_OFFSET = 26;
 const CARD_DWELL = '55vh';
 
+/* Fixed star positions inside event card */
+const STARS = [
+  { x:  6, y: 12, s: 1.5 }, { x: 22, y: 68, s: 1   },
+  { x: 38, y: 28, s: 2   }, { x: 55, y: 60, s: 1   },
+  { x: 74, y: 14, s: 1.5 }, { x: 89, y: 75, s: 1   },
+  { x: 14, y: 50, s: 1   }, { x: 47, y: 86, s: 1.5 },
+  { x: 63, y: 40, s: 2   }, { x: 92, y: 32, s: 1   },
+  { x: 31, y: 92, s: 1   }, { x: 78, y: 54, s: 1.5 },
+  { x:  4, y: 36, s: 1   }, { x: 96, y: 64, s: 1   },
+];
+
 const TECHNICAL_EVENTS = [
   {
-    title: 'Paper Presentation',
+    title: 'Cosmic Research (Paper Presentation)',
     icon: FileText,
     tag: 'TECH · 01',
     num: '01',
@@ -25,7 +46,7 @@ const TECHNICAL_EVENTS = [
     ],
   },
   {
-    title: 'Coding Challenge',
+    title: 'Code Orbit (Coding Contest)',
     icon: Code2,
     tag: 'TECH · 02',
     num: '02',
@@ -41,7 +62,7 @@ const TECHNICAL_EVENTS = [
     ],
   },
   {
-    title: 'Prompt Arena',
+    title: 'Prompt Protocol (AI Prompt Engineering)',
     icon: Bot,
     tag: 'TECH · 03',
     num: '03',
@@ -54,7 +75,8 @@ const TECHNICAL_EVENTS = [
   },
 ];
 
-function BigEventCard({ event, accent, accentRGB }) {
+/* ── Single large event card — shiny piano-black, matches coordinator style ── */
+function BigEventCard({ event }) {
   const [open, setOpen] = useState(false);
   const [coordIdx, setCoordIdx] = useState(0);
   const Icon = event.icon;
@@ -69,192 +91,321 @@ function BigEventCard({ event, accent, accentRGB }) {
   };
 
   return (
-    <div
-      style={{
-        background: '#04050e',
-        border: '1px solid rgba(' + accentRGB + ',0.4)',
+    /* Snake border wrapper — same as coordinator cards */
+    <div className="coord-snake-wrap">
+
+      {/* ── SHINY BLACK CARD ── */}
+      <div style={{
         borderRadius: 28,
         overflow: 'hidden',
         position: 'relative',
-        maxWidth: 620,
-        width: '100%',
-        boxShadow: '0 0 40px rgba(' + accentRGB + ', 0.15), inset 0 0 20px rgba(' + accentRGB + ', 0.05)',
-      }}
-    >
-      <div style={{
-        height: 3,
-        background: 'linear-gradient(90deg, ' + accent + ', rgba(' + accentRGB + ',0.2) 80%, transparent)',
-      }} />
+        /* Piano-black depth gradient */
+        background: `
+          radial-gradient(ellipse at 30% 0%, rgba(255,255,255,0.07) 0%, transparent 55%),
+          linear-gradient(160deg, #1e1e1e 0%, #000000 35%, #060606 65%, #0e0e0e 100%)
+        `,
+        boxShadow: `
+          inset 0 1px 0 rgba(255,255,255,0.12),
+          inset 0 0 50px rgba(0,0,0,0.7),
+          inset 0 -1px 0 rgba(255,255,255,0.04),
+          0 0 60px rgba(0,0,0,0.8)
+        `,
+      }}>
 
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: 180,
-        background: 'radial-gradient(ellipse at 20% 0%, rgba(' + accentRGB + ',0.2), transparent)',
-        pointerEvents: 'none',
-      }} />
+        {/* Twinkling stars */}
+        {STARS.map((star, i) => (
+          <motion.div
+            key={i}
+            animate={{ opacity: [0.12, 0.95, 0.12] }}
+            transition={{
+              duration: 2.5 + (i % 4) * 0.6,
+              repeat: Infinity,
+              delay: i * 0.22,
+              ease: 'easeInOut',
+            }}
+            style={{
+              position: 'absolute',
+              left: `${star.x}%`,
+              top:  `${star.y}%`,
+              width: star.s,
+              height: star.s,
+              background: '#fff',
+              borderRadius: '50%',
+              boxShadow: `0 0 ${star.s * 3}px rgba(255,255,255,0.9)`,
+              pointerEvents: 'none',
+            }}
+          />
+        ))}
 
-      <div style={{ padding: 'clamp(32px, 5vw, 48px)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 28 }}>
-          <span style={{
-            fontFamily: 'Orbitron',
-            fontSize: 'clamp(3rem, 8vw, 5rem)',
-            fontWeight: 900,
-            color: 'rgba(' + accentRGB + ',0.12)',
-            lineHeight: 1,
-            userSelect: 'none',
-          }}>
-            {event.num}
-          </span>
-          <div>
+        {/* Diagonal gloss sweep */}
+        <motion.div
+          animate={{ x: ['-120%', '220%'] }}
+          transition={{ duration: 4, repeat: Infinity, repeatDelay: 9, ease: 'easeInOut' }}
+          style={{
+            position: 'absolute', inset: 0,
+            width: '25%',
+            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%)',
+            transform: 'skewX(-16deg)',
+            pointerEvents: 'none',
+            zIndex: 1,
+          }}
+        />
+
+        {/* Card body — scrollable if content exceeds viewport */}
+        <div className="custom-scrollbar" style={{
+          padding: 'clamp(24px, 5vw, 48px)',
+          position: 'relative', zIndex: 2,
+          maxHeight: 'calc(100vh - 280px)',
+          overflowY: 'auto',
+        }}>
+
+          {/* Event number + tag */}
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24 }}>
+            <span style={{
+              fontFamily: 'Orbitron',
+              fontSize: 'clamp(3.5rem, 9vw, 6rem)',
+              fontWeight: 900,
+              color: 'rgba(255,255,255,0.2)',
+              lineHeight: 1,
+              userSelect: 'none',
+            }}>
+              {event.num}
+            </span>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
-              background: 'rgba(' + accentRGB + ',0.12)',
-              border: '1px solid rgba(' + accentRGB + ',0.3)',
-              borderRadius: 100, padding: '4px 14px',
-              marginBottom: 8,
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(255,255,255,0.18)',
+              borderRadius: 100, padding: '5px 14px',
+              backdropFilter: 'blur(4px)',
             }}>
-              <Icon size={13} color={accent} strokeWidth={1.5} />
+              <Icon size={11} color="rgba(255,255,255,0.65)" strokeWidth={1.5} />
               <span style={{
                 fontFamily: 'Orbitron',
-                fontSize: 10, color: accent,
-                letterSpacing: '0.25em', textTransform: 'uppercase',
+                fontSize: 9, color: 'rgba(255,255,255,0.65)',
+                letterSpacing: '0.3em', textTransform: 'uppercase',
               }}>{event.tag}</span>
             </div>
           </div>
-        </div>
 
-        <h3 style={{
-          fontFamily: 'Orbitron, sans-serif',
-          fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
-          fontWeight: 900,
-          color: '#f0f0f8',
-          lineHeight: 1.1,
-          letterSpacing: '-0.02em',
-          marginBottom: 20,
-        }}>{event.title}</h3>
+          {/* Title */}
+          <h3 style={{
+            fontFamily: 'Orbitron, sans-serif',
+            fontSize: 'clamp(1.6rem, 3.5vw, 2.5rem)',
+            fontWeight: 900,
+            color: '#ffffff',
+            lineHeight: 1.1,
+            letterSpacing: '-0.02em',
+            marginBottom: 20,
+            textShadow: '0 0 30px rgba(255,255,255,0.12)',
+          }}>{event.title}</h3>
 
-        <p style={{
-          fontFamily: 'Inter',
-          fontSize: 'clamp(0.95rem, 1.6vw, 1.1rem)',
-          color: 'rgba(255,255,255,0.58)',
-          lineHeight: 1.85,
-          marginBottom: event.rounds ? 24 : 32,
-        }}>{event.description}</p>
+          {/* White divider */}
+          <div style={{
+            width: '100%', height: 1,
+            background: 'linear-gradient(90deg, rgba(255,255,255,0.2) 0%, transparent 80%)',
+            marginBottom: 20,
+          }} />
 
-        {event.rounds && (
-          <div style={{ marginBottom: 32 }}>
-            {event.rounds.map((r, i) => (
-              <div key={i} style={{
-                display: 'flex', alignItems: 'flex-start', gap: 12,
-                marginBottom: 12,
-                padding: '12px 16px',
-                background: 'rgba(' + accentRGB + ',0.07)',
-                border: '1px solid rgba(' + accentRGB + ',0.15)',
-                borderRadius: 12,
-              }}>
-                <span style={{
-                  fontFamily: 'Orbitron', fontSize: 9,
-                  color: accent, flexShrink: 0,
-                  background: 'rgba(' + accentRGB + ',0.2)',
-                  padding: '3px 8px', borderRadius: 6,
-                  letterSpacing: '0.15em',
-                  marginTop: 2,
-                }}>{'R' + (i + 1)}</span>
-                <span style={{
-                  fontFamily: 'Inter', fontSize: 14,
-                  color: 'rgba(255,255,255,0.68)',
-                  lineHeight: 1.6,
-                }}>{r}</span>
-              </div>
-            ))}
-          </div>
-        )}
+          {/* Description */}
+          <p style={{
+            fontFamily: 'Enbora',
+            fontSize: 'clamp(0.9rem, 1.5vw, 1rem)',
+            color: 'rgba(255,255,255,0.52)',
+            lineHeight: 1.85,
+            marginBottom: event.rounds ? 24 : 28,
+          }}>{event.description}</p>
 
-        <button
-          onClick={() => setOpen(function (o) { return !o; })}
-          style={{
-            display: 'flex', alignItems: 'center', gap: 8,
-            background: open ? 'rgba(' + accentRGB + ',0.1)' : 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(' + accentRGB + ',0.25)',
-            borderRadius: 12, padding: '12px 20px',
-            color: accent,
-            fontFamily: 'Space Grotesk', fontSize: 13, fontWeight: 600,
-            cursor: 'pointer', width: '100%',
-            transition: 'background 0.3s ease',
-            letterSpacing: '0.05em',
-          }}
-        >
-          <Users size={14} strokeWidth={1.5} />
-          <span style={{ flex: 1, textAlign: 'left' }}>
-            {open ? 'Hide' : 'View'} Coordinators
-          </span>
-          <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.3, ease: 'easeInOut' }}>
-            <ChevronDown size={16} />
-          </motion.span>
-        </button>
+          {event.rounds && (
+            <div style={{ marginBottom: 28 }}>
+              {event.rounds.map((r, i) => (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'flex-start', gap: 12,
+                  marginBottom: 12,
+                  padding: '12px 16px',
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  borderRadius: 12,
+                }}>
+                  <span style={{
+                    fontFamily: 'Orbitron', fontSize: 9,
+                    color: 'rgba(255,255,255,0.7)', flexShrink: 0,
+                    background: 'rgba(255,255,255,0.1)',
+                    padding: '3px 8px', borderRadius: 6,
+                    letterSpacing: '0.15em',
+                    marginTop: 2,
+                    border: '1px solid rgba(255,255,255,0.18)',
+                  }}>{'R' + (i + 1)}</span>
+                  <span style={{
+                    fontFamily: 'Enbora', fontSize: 14,
+                    color: 'rgba(255,255,255,0.68)',
+                    lineHeight: 1.6,
+                  }}>{r}</span>
+                </div>
+              ))}
+            </div>
+          )}
 
-        <AnimatePresence initial={false}>
-          {open && (
-            <motion.div
-              key="coords"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.35, ease: 'easeInOut' }}
-              style={{ overflow: 'hidden' }}
-            >
-              <div style={{
-                paddingTop: 16,
-                display: 'flex', flexDirection: 'column', gap: 10,
-              }}>
-                {event.coordinators.map((c, i) => (
+          {/* Coordinator toggle */}
+          <button
+            onClick={() => setOpen(o => !o)}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 8,
+              background: open ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.2)',
+              borderRadius: 12, padding: '12px 20px',
+              color: 'rgba(255,255,255,0.75)',
+              fontFamily: 'Enbora', fontSize: 13, fontWeight: 600,
+              cursor: 'pointer', width: '100%',
+              transition: 'all 0.25s ease',
+              letterSpacing: '0.05em',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = 'rgba(255,255,255,0.12)';
+              e.currentTarget.style.boxShadow = '0 0 20px rgba(255,255,255,0.08)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = open ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.04)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+          >
+            <Users size={14} strokeWidth={1.5} />
+            <span style={{ flex: 1, textAlign: 'left' }}>
+              {open ? 'Hide' : 'View'} Coordinators
+            </span>
+            <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.3, ease: 'easeInOut' }}>
+              <ChevronDown size={16} />
+            </motion.span>
+          </button>
+
+          {/* Coordinator list */}
+          <AnimatePresence initial={false}>
+            {open && (
+              <motion.div
+                key="coords"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.35, ease: 'easeInOut' }}
+                style={{ overflow: 'hidden' }}
+              >
+                <div style={{ paddingTop: 14 }}>
                   <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -12 }}
+                    key={coordIdx}
+                    initial={{ opacity: 0, x: 15 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.07, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    exit={{ opacity: 0, x: -15 }}
+                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                     style={{
                       display: 'flex', alignItems: 'center',
                       justifyContent: 'space-between',
-                      padding: '10px 14px',
-                      background: 'rgba(' + accentRGB + ',0.06)',
-                      border: '1px solid rgba(' + accentRGB + ',0.12)',
-                      borderRadius: 10,
+                      padding: '16px 20px',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid rgba(255,255,255,0.14)',
+                      borderRadius: 16,
+                      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.07)',
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                       <div style={{
-                        width: 30, height: 30,
-                        background: 'rgba(' + accentRGB + ',0.2)',
+                        width: 40, height: 40,
+                        background: 'radial-gradient(circle at 35% 28%, #2a2a2a 0%, #111 30%, #000 100%)',
                         borderRadius: '50%',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontFamily: 'Orbitron', fontWeight: 800, fontSize: 12,
-                        color: accent, flexShrink: 0,
-                      }}>{c.name.charAt(0)}</div>
-                      <span style={{ fontFamily: 'Space Grotesk', fontSize: 14, color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>
-                        {c.name}
-                      </span>
+                        fontFamily: 'Orbitron', fontWeight: 800, fontSize: 15,
+                        color: 'rgba(255,255,255,0.85)', flexShrink: 0,
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        boxShadow: 'inset 0 2px 6px rgba(255,255,255,0.1), 0 0 12px rgba(255,255,255,0.08)',
+                      }}>{event.coordinators[coordIdx].name.charAt(0)}</div>
+                      <div>
+                        <span style={{ display: 'block', fontFamily: 'Enbora', fontSize: 15, color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>
+                          {event.coordinators[coordIdx].name}
+                        </span>
+                        <a
+                          href={`tel:${event.coordinators[coordIdx].phone}`}
+                          style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 6,
+                            fontFamily: 'Enbora', fontSize: 13,
+                            color: 'rgba(255,255,255,0.5)', textDecoration: 'none',
+                            marginTop: 4,
+                          }}
+                        >
+                          <Phone size={12} strokeWidth={1.5} /> {event.coordinators[coordIdx].phone}
+                        </a>
+                      </div>
                     </div>
-                    <a
-                      href={'tel:' + c.phone}
-                      style={{
-                        display: 'inline-flex', alignItems: 'center', gap: 6,
-                        fontFamily: 'Inter', fontSize: 12,
-                        color: accent, textDecoration: 'none',
-                        background: 'rgba(' + accentRGB + ',0.1)',
-                        padding: '4px 10px', borderRadius: 8,
-                        border: '1px solid rgba(' + accentRGB + ',0.22)',
-                        transition: 'background 0.2s ease',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <Phone size={11} strokeWidth={1.5} /> {c.phone}
-                    </a>
+
+                    {/* Carousel Controls */}
+                    {event.coordinators.length > 1 && (
+                      <div style={{ display: 'flex', gap: 6 }}>
+                        <button onClick={prevCoord} style={{
+                          background: 'rgba(255,255,255,0.06)',
+                          border: '1px solid rgba(255,255,255,0.18)',
+                          borderRadius: '50%', width: 30, height: 30,
+                          color: 'rgba(255,255,255,0.7)', cursor: 'pointer',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          fontSize: 13,
+                        }}>&lt;</button>
+                        <button onClick={nextCoord} style={{
+                          background: 'rgba(255,255,255,0.06)',
+                          border: '1px solid rgba(255,255,255,0.18)',
+                          borderRadius: '50%', width: 30, height: 30,
+                          color: 'rgba(255,255,255,0.7)', cursor: 'pointer',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          fontSize: 13,
+                        }}>&gt;</button>
+                      </div>
+                    )}
                   </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Long arc orbit line — 3/4 card width, rotating */}
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
+          style={{
+            position: 'absolute', bottom: -55, right: -55,
+            width: 220, height: 220,
+            pointerEvents: 'none',
+          }}
+        >
+          {/* Arc: a partial ring (~270deg visible stroke = 3/4 length) */}
+          <svg width="220" height="220" viewBox="0 0 220 220" style={{ overflow: 'visible' }}>
+            <circle
+              cx="110" cy="110" r="100"
+              fill="none"
+              stroke="rgba(255,255,255,0.07)"
+              strokeWidth="1"
+              strokeDasharray="565 63"
+              strokeDashoffset="0"
+              strokeLinecap="round"
+            />
+          </svg>
+        </motion.div>
+        <motion.div
+          animate={{ rotate: -360 }}
+          transition={{ duration: 14, repeat: Infinity, ease: 'linear' }}
+          style={{
+            position: 'absolute', bottom: -28, right: -28,
+            width: 110, height: 110,
+            pointerEvents: 'none',
+          }}
+        >
+          <svg width="110" height="110" viewBox="0 0 110 110" style={{ overflow: 'visible' }}>
+            <circle
+              cx="55" cy="55" r="48"
+              fill="none"
+              stroke="rgba(255,255,255,0.1)"
+              strokeWidth="1"
+              strokeDasharray="270 31"
+              strokeDashoffset="0"
+              strokeLinecap="round"
+            />
+          </svg>
+        </motion.div>
       </div>
     </div>
   );
@@ -279,12 +430,13 @@ export default function TechnicalEvents() {
           />
         </Suspense>
 
+        {/* Subtle white/silver nebula — no green */}
         <motion.div
           animate={{ y: [0, -22, 0], x: [0, 10, 0] }}
           transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
           style={{
             position: 'absolute', width: 700, height: 700,
-            background: 'radial-gradient(circle, rgba(0,184,150,0.15) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)',
             top: '5%', right: '-10%', borderRadius: '50%',
             filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0,
           }}
@@ -294,7 +446,7 @@ export default function TechnicalEvents() {
           transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
           style={{
             position: 'absolute', width: 420, height: 420,
-            background: 'radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(255,255,255,0.025) 0%, transparent 70%)',
             bottom: '5%', left: '-5%', borderRadius: '50%',
             filter: 'blur(70px)', pointerEvents: 'none', zIndex: 0,
           }}
@@ -316,11 +468,11 @@ export default function TechnicalEvents() {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
             <span style={{
-              fontFamily: 'Space Grotesk', fontSize: 10, fontWeight: 600,
+              fontFamily: 'Enbora', fontSize: 10, fontWeight: 600,
               letterSpacing: '0.45em', textTransform: 'uppercase',
-              color: '#00b896',
-              background: 'rgba(0,184,150,0.12)',
-              border: '1px solid rgba(0,184,150,0.3)',
+              color: 'rgba(255,255,255,0.75)',
+              background: 'rgba(255,255,255,0.07)',
+              border: '1px solid rgba(255,255,255,0.18)',
               borderRadius: 100, padding: '5px 16px',
               display: 'inline-flex', alignItems: 'center', gap: 6,
             }}>
@@ -328,7 +480,7 @@ export default function TechnicalEvents() {
               Technical Events
             </span>
             <span style={{
-              fontFamily: 'Space Grotesk', fontSize: 10,
+              fontFamily: 'Enbora', fontSize: 10,
               color: 'rgba(255,255,255,0.2)',
               letterSpacing: '0.1em',
             }}>— {TECHNICAL_EVENTS.length} events</span>
@@ -340,10 +492,8 @@ export default function TechnicalEvents() {
             letterSpacing: '-0.02em',
             lineHeight: 1.05,
             marginTop: 8, marginBottom: 0,
-            background: 'linear-gradient(135deg, #22e5bb 0%, #38bdf8 60%, #f0f0f8 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
+            color: '#ffffff',
+            textShadow: '0 0 40px rgba(255,255,255,0.15)',
           }}>
             Technical Sectors
           </h2>
@@ -352,7 +502,7 @@ export default function TechnicalEvents() {
         {/* ── SCROLLABLE CARDS ── */}
         <div style={{
           padding: '0 clamp(24px, 5vw, 80px) 30vh',
-          paddingTop: '60vh', /* push cards down so they start entering from the bottom */
+          paddingTop: '60vh',
           display: 'flex', flexDirection: 'column',
         }}>
           {TECHNICAL_EVENTS.map((event, i) => (
@@ -366,16 +516,14 @@ export default function TechnicalEvents() {
                 display: 'flex',
                 justifyContent: 'flex-start',
                 paddingTop: 8,
-                marginBottom: CARD_DWELL, /* Creates the scroll distance before next card */
+                marginBottom: CARD_DWELL,
               }}
             >
-              <BigEventCard
-                event={event}
-                accent={i % 2 === 0 ? '#00b896' : '#38bdf8'}
-                accentRGB={i % 2 === 0 ? '0,184,150' : '56,189,248'}
-              />
+              <BigEventCard event={event} />
             </div>
           ))}
+          {/* Spacer to allow the last card to dwell */}
+          <div style={{ height: '80vh' }} />
         </div>
       </div>
     </div>

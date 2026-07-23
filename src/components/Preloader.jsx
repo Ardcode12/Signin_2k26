@@ -3,20 +3,20 @@ import { useEffect, useState } from 'react';
 import { useProgress } from '@react-three/drei';
 
 /**
- * Preloader — clean warp-speed intro, no emojis.
- * Three concentric spinning rings + title + progress bar.
- * Fades out after ~2.8s.
+ * Preloader — clean warp-speed intro.
+ * Dept logo + concentric spinning rings + title + progress bar.
+ * Fades out after assets load.
  */
 export default function Preloader({ onComplete }) {
   const [done, setDone] = useState(false);
-  const { progress, item, loaded, total } = useProgress();
+  const { progress, total } = useProgress();
 
   useEffect(() => {
     if (progress === 100 && total > 0) {
       const t = setTimeout(() => {
         setDone(true);
         onComplete?.();
-      }, 600); // slight delay after reaching 100%
+      }, 600);
       return () => clearTimeout(t);
     }
   }, [progress, total, onComplete]);
@@ -28,7 +28,7 @@ export default function Preloader({ onComplete }) {
         setDone(true);
         onComplete?.();
       }
-    }, 15000); // max 15 seconds wait
+    }, 15000);
     return () => clearTimeout(t);
   }, [done, onComplete]);
 
@@ -43,16 +43,25 @@ export default function Preloader({ onComplete }) {
           style={{
             position: 'fixed',
             inset: 0,
-            background: '#020309',
+            /* Shiny black bg — deep piano black with subtle gloss */
+            background: 'radial-gradient(ellipse at 30% 20%, #1a1a1a 0%, #050505 40%, #000000 100%)',
             zIndex: 9999,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flexDirection: 'column',
-            gap: 40,
+            gap: 36,
             overflow: 'hidden',
           }}
         >
+          {/* Top-left subtle gloss sheen */}
+          <div style={{
+            position: 'absolute', top: 0, left: 0,
+            width: '60%', height: '40%',
+            background: 'radial-gradient(ellipse at 20% 10%, rgba(255,255,255,0.035) 0%, transparent 60%)',
+            pointerEvents: 'none',
+          }} />
+
           {/* Warp speed lines (background) */}
           <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
             {Array.from({ length: 24 }).map((_, i) => (
@@ -63,7 +72,8 @@ export default function Preloader({ onComplete }) {
                   top: `${(i / 24) * 100 + Math.sin(i) * 3}%`,
                   left: '50%',
                   height: `${0.5 + (i % 3) * 0.5}px`,
-                  background: 'linear-gradient(90deg, transparent, rgba(0,184,150,0.7), transparent)',
+                  /* White warp lines — no green */
+                  background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent)',
                   animationName: i % 2 === 0 ? 'warp-out' : undefined,
                   animationDuration: `${0.5 + (i % 4) * 0.2}s`,
                   animationDelay: `${(i * 0.06)}s`,
@@ -78,42 +88,85 @@ export default function Preloader({ onComplete }) {
             ))}
           </div>
 
-          {/* Concentric rings */}
-          <div style={{ position: 'relative', width: 128, height: 128, flexShrink: 0 }}>
-            {/* Outer ring */}
+          {/* Dept Logo */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            style={{ position: 'relative' }}
+          >
+            {/* Outer rotating arc ring around logo */}
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+              style={{
+                position: 'absolute',
+                inset: -14,
+                borderRadius: '50%',
+                pointerEvents: 'none',
+              }}
+            >
+              <svg width="100%" height="100%" viewBox="0 0 120 120">
+                <circle
+                  cx="60" cy="60" r="56"
+                  fill="none"
+                  stroke="rgba(255,255,255,0.18)"
+                  strokeWidth="1"
+                  strokeDasharray="263 88"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </motion.div>
+            {/* Inner counter-rotating arc */}
+            <motion.div
+              animate={{ rotate: -360 }}
+              transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}
+              style={{
+                position: 'absolute',
+                inset: -6,
+                borderRadius: '50%',
+                pointerEvents: 'none',
+              }}
+            >
+              <svg width="100%" height="100%" viewBox="0 0 100 100">
+                <circle
+                  cx="50" cy="50" r="46"
+                  fill="none"
+                  stroke="rgba(255,255,255,0.08)"
+                  strokeWidth="1"
+                  strokeDasharray="216 72"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </motion.div>
+
+            {/* Dept logo image */}
             <div style={{
-              position: 'absolute', inset: 0,
-              border: '1px solid rgba(0,184,150,0.4)',
-              borderTopColor: 'rgba(34,229,187,0.9)',
+              width: 92, height: 92,
               borderRadius: '50%',
-              animation: 'slow-spin 1.6s linear infinite',
-            }} />
-            {/* Mid ring */}
-            <div style={{
-              position: 'absolute', inset: 14,
-              border: '1px solid rgba(0,184,150,0.25)',
-              borderBottomColor: 'rgba(34,229,187,0.7)',
-              borderRadius: '50%',
-              animation: 'slow-spin-rev 2s linear infinite',
-            }} />
-            {/* Inner filled orb */}
-            <div style={{
-              position: 'absolute', inset: 30,
-              borderRadius: '50%',
-              background: 'radial-gradient(circle at 40% 35%, rgba(34,229,187,0.35), rgba(0,184,150,0.08))',
-              border: '1px solid rgba(0,184,150,0.2)',
-            }} />
-            {/* Center dot */}
-            <div style={{
-              position: 'absolute',
-              top: '50%', left: '50%',
-              transform: 'translate(-50%,-50%)',
-              width: 8, height: 8,
-              borderRadius: '50%',
-              background: 'rgba(34,229,187,0.9)',
-              boxShadow: '0 0 16px rgba(34,229,187,0.7)',
-            }} />
-          </div>
+              overflow: 'hidden',
+              background: 'radial-gradient(circle at 35% 28%, #2a2a2a 0%, #111 30%, #000 100%)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              border: '1px solid rgba(255,255,255,0.15)',
+              boxShadow: `
+                inset 0 2px 8px rgba(255,255,255,0.1),
+                inset 0 -4px 12px rgba(0,0,0,0.9),
+                0 0 30px rgba(255,255,255,0.06)
+              `,
+            }}>
+              <img
+                src="/images/dept_logo.jpg"
+                alt="Department Logo"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  borderRadius: '50%',
+                }}
+                onError={e => { e.currentTarget.style.display = 'none'; }}
+              />
+            </div>
+          </motion.div>
 
           {/* Title + subtitle */}
           <motion.div
@@ -123,17 +176,18 @@ export default function Preloader({ onComplete }) {
             style={{ textAlign: 'center' }}
           >
             <h1 style={{
-              fontFamily: 'Orbitron, sans-serif',
+              fontFamily: "'Fedrin Sambo', 'Orbitron', sans-serif",
               fontSize: 'clamp(2rem, 6vw, 3rem)',
               fontWeight: 900,
               letterSpacing: '0.18em',
               color: '#f0f0f8',
               marginBottom: 10,
+              textShadow: '0 0 40px rgba(255,255,255,0.15)',
             }}>
-              Siginin<span style={{ color: 'rgba(34,229,187,0.85)' }}>'26</span>
+              Siginin<span style={{ color: 'rgba(255,255,255,0.5)' }}>'26</span>
             </h1>
             <p style={{
-              fontFamily: 'Space Grotesk, sans-serif',
+              fontFamily: 'Enbora, sans-serif',
               color: 'rgba(240,240,248,0.35)',
               letterSpacing: '0.4em',
               fontSize: 11,
@@ -157,7 +211,7 @@ export default function Preloader({ onComplete }) {
             }}
           >
             <motion.div
-              style={{ height: '100%', background: 'rgba(34,229,187,0.8)', borderRadius: 2 }}
+              style={{ height: '100%', background: 'rgba(255,255,255,0.6)', borderRadius: 2 }}
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.3, ease: 'easeOut' }}
             />
