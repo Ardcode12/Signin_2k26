@@ -37,7 +37,7 @@ function getBreakpointKey(width) {
 const NAV_HEIGHT = 72;
 const HEADER_HEIGHT = 118;
 const STACK_OFFSET = 48;
-const CARD_DWELL = '30vh';
+const CARD_DWELL = '15vh';
 
 /* Fixed star positions inside event card */
 const STARS = [
@@ -56,6 +56,7 @@ const TECHNICAL_EVENTS = [
     icon: FileText,
     tag: 'TECH · 01',
     num: '01',
+    formLink: 'https://forms.gle/CScNS4nVePET8RGC9', // ← Replace with actual Google Form URL
     description: 'Present your innovative ideas, research, and technical solutions before a panel of faculty members. Showcase your knowledge, communication skills, and confidence while defending your concepts through an interactive question-and-answer session. Whether it\'s an emerging technology, a groundbreaking innovation, or a real-world solution, this is your platform to inspire.',
     coordinators: [
       { name: 'Dharun Vidyakar', phone: '8610708272' },
@@ -68,6 +69,7 @@ const TECHNICAL_EVENTS = [
     icon: Code2,
     tag: 'TECH · 02',
     num: '02',
+    formLink: 'https://forms.gle/QPQXJahCpNkMmAaa7', // ← Replace with actual Google Form URL
     description: 'A two-round coding gauntlet designed to test your algorithmic thinking, debugging prowess, and speed under pressure.',
     rounds: [
       'Round 1 — Tech Quiz, Code Snippets & Debugging Challenges',
@@ -84,6 +86,7 @@ const TECHNICAL_EVENTS = [
     icon: Bot,
     tag: 'TECH · 03',
     num: '03',
+    formLink: 'https://forms.gle/kMA8wVeYxxpsqbm6A', // ← Replace with actual Google Form URL
     description: 'Creativity Meets Artificial Intelligence.Design a visually stunning poster using AI image-generation tools through the power of prompts alone. Participants will be evaluated not only on the final poster but also on the quality, creativity, structure, and level of detail in the prompts used to generate it. Master the art of prompt engineering and let your imagination take center stage.',
     coordinators: [
       { name: 'Shreyaa', phone: '+91 9842484828' },
@@ -267,8 +270,13 @@ function BigEventCard({ event }) {
           {/* Action Buttons */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <a
-              href="#"
-              onClick={(e) => { e.preventDefault(); alert('Registration will open shortly via Google Forms!'); }}
+              href={event.formLink && event.formLink !== 'YOUR_FORM_LINK_HERE' ? event.formLink : '#'}
+              target={event.formLink && event.formLink !== 'YOUR_FORM_LINK_HERE' ? '_blank' : undefined}
+              rel="noopener noreferrer"
+              onClick={(!event.formLink || event.formLink === 'YOUR_FORM_LINK_HERE')
+                ? (e) => { e.preventDefault(); alert('Registration will open shortly via Google Forms!'); }
+                : undefined
+              }
               style={{
                 display: 'block', textAlign: 'center',
                 background: 'rgba(255,255,255,0.85)',
@@ -560,8 +568,8 @@ export default function TechnicalEvents() {
 
         {/* ── SCROLLABLE CARDS ── */}
         <div style={{
-          padding: '0 clamp(24px, 5vw, 80px) 20vh',
-          paddingTop: '35vh',
+          padding: '0 clamp(24px, 5vw, 80px) 12vh',
+          paddingTop: '18vh',
           display: 'flex', flexDirection: 'column',
         }}>
           {TECHNICAL_EVENTS.map((event, i) => (
@@ -582,7 +590,7 @@ export default function TechnicalEvents() {
             </div>
           ))}
           {/* Spacer to allow the last card to dwell */}
-          <div style={{ height: '40vh' }} />
+          <div style={{ height: '15vh' }} />
         </div>
       </div>
     </div>

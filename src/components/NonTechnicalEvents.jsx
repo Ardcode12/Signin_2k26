@@ -16,7 +16,7 @@ const STARS = [
 const NAV_HEIGHT = 72;
 const HEADER_HEIGHT = 118;
 const STACK_OFFSET = 48;
-const CARD_DWELL = '30vh';
+const CARD_DWELL = '15vh';
 
 const NON_TECHNICAL_EVENTS = [
   {
@@ -24,6 +24,7 @@ const NON_TECHNICAL_EVENTS = [
     icon: Smile,
     tag: 'FUN · 01',
     num: '01',
+    formLink: 'https://docs.google.com/forms/d/e/1FAIpQLSfpWBwfaA6WSxdr35bPV_GVA1UbFHjFWEZD6SVzeY9Z57ZAQw/viewform?usp=publish-editor', // ← Replace with actual Google Form URL
     description: 'Actions Speak Louder Than Words.One teammate receives the name of a movie, object, personality, or phrase and must communicate it to the rest of the team using actions and expressions alone—without speaking, writing, or making sounds. The team that guesses the maximum number of clues within the given time emerges victorious. Teamwork, creativity, and quick thinking are the keys to success.',
     coordinators: [
       { name: 'Srimathi', phone: '9715206206' },
@@ -36,6 +37,7 @@ const NON_TECHNICAL_EVENTS = [
     icon: Shuffle,
     tag: 'FUN · 02',
     num: '02',
+    formLink: 'https://docs.google.com/forms/d/e/1FAIpQLSf1wr5N_caXTTLnQtlLe6cU9yORojOhwf8mf9Nekt0YjtHJHA/viewform?usp=publish-editor', // ← Replace with actual Google Form URL
     description: 'A fast-paced one-on-one battle where participants must answer every question with an irrelevant response. The challenge is to avoid giving a relevant answer or repeating any previous response. As the pace intensifies, maintaining composure and thinking unpredictably becomes the ultimate test. The participant who survives the longest without breaking the rules wins.',
     coordinators: [
       { name: 'Dharanish BM', phone: '+91 98423 75676' },
@@ -189,8 +191,13 @@ function BigEventCard({ event }) {
           {/* Action Buttons */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <a
-              href="#"
-              onClick={(e) => { e.preventDefault(); alert('Registration will open shortly via Google Forms!'); }}
+              href={event.formLink && event.formLink !== 'YOUR_FORM_LINK_HERE' ? event.formLink : '#'}
+              target={event.formLink && event.formLink !== 'YOUR_FORM_LINK_HERE' ? '_blank' : undefined}
+              rel="noopener noreferrer"
+              onClick={(!event.formLink || event.formLink === 'YOUR_FORM_LINK_HERE')
+                ? (e) => { e.preventDefault(); alert('Registration will open shortly via Google Forms!'); }
+                : undefined
+              }
               style={{
                 display: 'block', textAlign: 'center',
                 background: 'rgba(255,255,255,0.85)',
@@ -460,8 +467,8 @@ export default function NonTechnicalEvents() {
 
         {/* ── SCROLLABLE CARDS ── */}
         <div style={{
-          padding: '0 clamp(24px, 5vw, 80px) 20vh',
-          paddingTop: '35vh',
+          padding: '0 clamp(24px, 5vw, 80px) 12vh',
+          paddingTop: '18vh',
           display: 'flex', flexDirection: 'column',
         }}>
           {NON_TECHNICAL_EVENTS.map((event, i) => (
@@ -482,7 +489,7 @@ export default function NonTechnicalEvents() {
             </div>
           ))}
           {/* Spacer to allow the last card to dwell */}
-          <div style={{ height: '40vh' }} />
+          <div style={{ height: '15vh' }} />
         </div>
       </div>
     </div>
