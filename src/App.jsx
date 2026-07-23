@@ -1,4 +1,4 @@
-import { useState, useCallback, lazy, Suspense } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 
 // Components
@@ -19,6 +19,31 @@ export default function App() {
   const [ready, setReady] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
 
+  useEffect(() => {
+    // Create global background audio instance if it doesn't exist
+    if (!window.__bgAudio) {
+      const bgAudio = new Audio('/audio/bg_aud.mp3');
+      bgAudio.loop = true;
+      bgAudio.volume = 0.4; // Normal ambient volume
+      window.__bgAudio = bgAudio;
+
+      // Browsers block autoplay without interaction, so we attempt to play
+      // and attach one-time listeners to start it on the first interaction.
+      const playAttempt = () => {
+        bgAudio.play().then(() => {
+          window.removeEventListener('click', playAttempt);
+          window.removeEventListener('touchstart', playAttempt);
+          window.removeEventListener('scroll', playAttempt);
+        }).catch(() => {}); // ignore autoplay blocked errors
+      };
+      
+      playAttempt();
+      window.addEventListener('click', playAttempt);
+      window.addEventListener('touchstart', playAttempt);
+      window.addEventListener('scroll', playAttempt);
+    }
+  }, []);
+
   const handleNavigate = useCallback((id) => {
     setActiveSection(id);
     const el = document.getElementById(`section-${id}`);
@@ -29,6 +54,26 @@ export default function App() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'transparent', position: 'relative' }}>
+      {/* Global Background Video */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        src="/bg_nowatermark.mp4"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          objectFit: 'cover',
+          zIndex: -1,
+          opacity: 0.8,
+          pointerEvents: 'none',
+        }}
+      />
+      
       {/* Layer 0: Animated Starfield Background */}
       <StarfieldBackground />
 

@@ -1,22 +1,49 @@
 import { motion, useInView } from 'framer-motion';
-import { useState, useEffect, useRef, lazy, Suspense } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import useParallax from '../hooks/useParallax';
 
-const ModelCanvas = lazy(() => import('./ModelCanvas'));
+import ModelCanvas from './ModelCanvas';
 
-const SHIP_CONFIG = {
-  pos: [-0.5, 0.2, -2],
-  rot: [0, -0.6, -0.1],
-  scale: 0.4,
-  speed: 1,
-  visible: true,
-  autoRotate: false,
-  animate: true,
+/* ─────────────────────────────────────────────────────────────
+   MODEL BREAKPOINT SETTINGS  ← edit these values in code
+   scale → uniform model scale
+   pos   → [x, y, z]   (y: negative = down, positive = up)
+   rot   → [x, y, z]   in radians
+───────────────────────────────────────────────────────────── */
+const MODEL_BREAKPOINTS = {
+  // Desktop — viewport ≥ 1024px
+  desktop: {
+    scale: 0.4,
+    pos: [-0.5, 0.2, -2],
+    rot: [0, -0.6, -0.1],
+  },
+  // Tablet — 768px to 1023px
+  tablet: {
+    scale: 0.32,
+    pos: [0.2, 0.4, -2],
+    rot: [0, -0.4, -0.05],
+  },
+  // Mobile — 481px to 767px
   mobile: {
-    scale: 0.28,
-    pos: [0, 0.5, -3],
+    scale: 0.22,
+    pos: [0, 1.7, -5],
+    rot: [0, -0.3, 0],
+  },
+  // Small mobile — ≤ 480px
+  mobileSmall: {
+    scale: 0.25,
+    pos: [-0.2, -1.4, -2.8],
+    rot: [0.1, -0.6, 0],
   },
 };
+
+/* Picks the right breakpoint key for a given viewport width */
+function getBreakpointKey(width) {
+  if (width <= 480) return 'mobileSmall';
+  if (width < 768)  return 'mobile';
+  if (width < 1024) return 'tablet';
+  return 'desktop';
+}
 
 /* ── Spec easing: cubic-bezier(0.16, 1, 0.3, 1) ── */
 const EASE = [0.16, 1, 0.3, 1];
@@ -82,6 +109,37 @@ export default function Hero({ onNavigate }) {
   const heroRef = useRef(null);
   const { ref: parallaxRef, y: parallaxY } = useParallax(0.1, [-40, 40]);
 
+  /* ── Responsive model config ── */
+  const [activeKey, setActiveKey] = useState(() => getBreakpointKey(window.innerWidth));
+
+  useEffect(() => {
+    const update = () => setActiveKey(getBreakpointKey(window.innerWidth));
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
+  /* Build ship config from the active breakpoint */
+  const bp = MODEL_BREAKPOINTS[activeKey];
+  const shipConfig = {
+    pos: bp.pos,
+    rot: bp.rot,
+    scale: bp.scale,
+    speed: 1,
+    visible: true,
+    autoRotate: false,
+    animate: true,
+    /* ── Advanced animations ── */
+    float: false,            // gentle vertical bob
+    floatSpeed: 0.5,        // cycles/sec
+    floatAmplitude: 0.1,    // units of travel
+    sway: true,             // subtle side roll
+    swaySpeed: 0.35,
+    swayAmplitude: 0.03,
+    drift: true,            // slow XZ drift
+    driftSpeed: 0.2,
+    driftAmplitude: 0.06,
+  };
+
   return (
     <motion.section
       ref={(el) => { heroRef.current = el; parallaxRef.current = el; }}
@@ -91,10 +149,12 @@ export default function Hero({ onNavigate }) {
       style={{
         minHeight: '100vh',
         display: 'flex',
-        alignItems: 'center',
+        alignItems: (activeKey === 'mobile' || activeKey === 'mobileSmall') ? 'flex-start' : 'center',
         position: 'relative',
         overflow: 'hidden',
-        padding: '120px clamp(16px, 3vw, 48px) 80px',
+        padding: (activeKey === 'mobile' || activeKey === 'mobileSmall') 
+          ? '90px clamp(16px, 3vw, 48px) 80px' 
+          : '120px clamp(16px, 3vw, 48px) 80px',
       }}
     >
       {/* ── Floating gradient blobs — subtle white, no green ── */}
@@ -155,7 +215,6 @@ export default function Hero({ onNavigate }) {
                 onError={e => { e.currentTarget.style.display = 'none'; }}
               />
             </div>
-
           </motion.div>
 
           {/* 1. Badge — first to enter */}
@@ -187,7 +246,6 @@ export default function Hero({ onNavigate }) {
             <br />
             <span style={{ color: 'rgba(255,255,255,0.55)', fontWeight: 800 }}>'26</span>
           </motion.h1>
-
 
           {/* Divider line */}
           <motion.div
@@ -251,14 +309,18 @@ export default function Hero({ onNavigate }) {
             </motion.button>
           </motion.div>
 
-
         </motion.div>
 
         {/* RIGHT: 3D Ship */}
-        <div style={{ position: 'absolute', top: 0, right: 0, width: '50%', height: '100%', zIndex: 1 }}>
-          <Suspense fallback={null}>
-            <ModelCanvas path="/model_glb/ship.glb" config={SHIP_CONFIG} fov={35} style={{ width: '100%', height: '100%' }} />
-          </Suspense>
+        <div style={{ 
+          position: 'absolute', 
+          top: 0, right: 0, 
+          width: (activeKey === 'mobile' || activeKey === 'mobileSmall') ? '100%' : '50%', 
+          height: '100%', 
+          zIndex: 1,
+          pointerEvents: (activeKey === 'mobile' || activeKey === 'mobileSmall') ? 'none' : 'auto' 
+        }}>
+          <ModelCanvas path="/model_glb/ship.glb" config={shipConfig} fov={35} style={{ width: '100%', height: '100%' }} />
         </div>
       </div>
 

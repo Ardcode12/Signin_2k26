@@ -15,12 +15,12 @@ const STARS = [
 
 const NAV_HEIGHT = 72;
 const HEADER_HEIGHT = 118;
-const STACK_OFFSET = 26;
+const STACK_OFFSET = 48;
 const CARD_DWELL = '55vh';
 
 const NON_TECHNICAL_EVENTS = [
   {
-    title: 'Stellar Signals (Dumb Charades)',
+    title: 'Stellar Signals',
     icon: Smile,
     tag: 'FUN · 01',
     num: '01',
@@ -32,7 +32,7 @@ const NON_TECHNICAL_EVENTS = [
     ],
   },
   {
-    title: 'Reverse Gravity (Flip Flop)',
+    title: 'Reverse Gravity',
     icon: Shuffle,
     tag: 'FUN · 02',
     num: '02',
@@ -185,11 +185,32 @@ function BigEventCard({ event }) {
             marginBottom: 28,
           }}>{event.description}</p>
 
-          {/* Coordinator toggle */}
-          <button
-            onClick={() => setOpen(o => !o)}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 8,
+          {/* Action Buttons */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <a
+              href="#"
+              onClick={(e) => { e.preventDefault(); alert('Registration will open shortly via Google Forms!'); }}
+              style={{
+                display: 'block', textAlign: 'center',
+                background: 'rgba(255,255,255,0.85)',
+                color: '#000',
+                borderRadius: 12, padding: '12px 20px',
+                fontFamily: 'Enbora', fontSize: 14, fontWeight: 700,
+                textDecoration: 'none',
+                transition: 'all 0.2s ease',
+                letterSpacing: '0.05em',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.transform = 'scale(1.02)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.85)'; e.currentTarget.style.transform = 'scale(1)'; }}
+            >
+              Register Now
+            </a>
+
+            {/* Coordinator toggle */}
+            <button
+              onClick={() => setOpen(o => !o)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 8,
               background: open ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.04)',
               border: '1px solid rgba(255,255,255,0.2)',
               borderRadius: 12, padding: '12px 20px',
@@ -300,6 +321,7 @@ function BigEventCard({ event }) {
               </motion.div>
             )}
           </AnimatePresence>
+          </div>
         </div>
 
         {/* Long arc orbit line — 3/4 card width, rotating */}
@@ -395,8 +417,7 @@ export default function NonTechnicalEvents() {
           top: NAV_HEIGHT,
           zIndex: 10,
           padding: '20px clamp(24px, 5vw, 80px) 16px',
-          background: 'linear-gradient(180deg, rgba(4,5,14,0.98) 75%, rgba(4,5,14,0) 100%)',
-          backdropFilter: 'blur(6px)',
+          background: 'transparent',
           pointerEvents: 'none',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>

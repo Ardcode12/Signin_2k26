@@ -1,24 +1,42 @@
-import { useState, lazy, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, Code2, Bot, Sparkles, Users, Phone, ChevronDown } from 'lucide-react';
 
-const ModelCanvas = lazy(() => import('./ModelCanvas'));
+import ModelCanvas from './ModelCanvas';
 
-const BLACKHOLE_CONFIG = {
-  pos: [4, 0, -3],
-  rot: [0.3, 0, 0],
-  scale: 1.5,
-  speed: 0.6,
-  visible: true,
+const MODEL_BREAKPOINTS = {
+  desktop: {
+    pos: [4, 0, -3],
+    rot: [0.3, 0, 0],
+    scale: 1.5,
+  },
+  tablet: {
+    pos: [3, -1, -3],
+    rot: [0.3, 0, 0],
+    scale: 1.3,
+  },
   mobile: {
     pos: [0, -2, -3],
+    rot: [0.3, 0, 0],
     scale: 1.05,
-  }
+  },
+  mobileSmall: {
+    pos: [1.5, 0.7, -3.5],
+    rot: [0.3, 0, 0],
+    scale: 0.7,
+  },
 };
+
+function getBreakpointKey(width) {
+  if (width <= 480) return 'mobileSmall';
+  if (width < 768)  return 'mobile';
+  if (width < 1024) return 'tablet';
+  return 'desktop';
+}
 
 const NAV_HEIGHT = 72;
 const HEADER_HEIGHT = 118;
-const STACK_OFFSET = 26;
+const STACK_OFFSET = 48;
 const CARD_DWELL = '55vh';
 
 /* Fixed star positions inside event card */
@@ -34,7 +52,7 @@ const STARS = [
 
 const TECHNICAL_EVENTS = [
   {
-    title: 'Cosmic Research (Paper Presentation)',
+    title: 'Cosmic Research ',
     icon: FileText,
     tag: 'TECH · 01',
     num: '01',
@@ -46,7 +64,7 @@ const TECHNICAL_EVENTS = [
     ],
   },
   {
-    title: 'Code Orbit (Coding Contest)',
+    title: 'Code Orbit',
     icon: Code2,
     tag: 'TECH · 02',
     num: '02',
@@ -62,7 +80,7 @@ const TECHNICAL_EVENTS = [
     ],
   },
   {
-    title: 'Prompt Protocol (AI Prompt Engineering)',
+    title: 'Prompt Protocol',
     icon: Bot,
     tag: 'TECH · 03',
     num: '03',
@@ -99,6 +117,7 @@ function BigEventCard({ event }) {
         borderRadius: 28,
         overflow: 'hidden',
         position: 'relative',
+        height: 'calc(100vh - 280px)', // Force consistent height for all cards so they stack cleanly
         /* Piano-black depth gradient */
         background: `
           radial-gradient(ellipse at 30% 0%, rgba(255,255,255,0.07) 0%, transparent 55%),
@@ -155,7 +174,7 @@ function BigEventCard({ event }) {
         <div className="custom-scrollbar" style={{
           padding: 'clamp(24px, 5vw, 48px)',
           position: 'relative', zIndex: 2,
-          maxHeight: 'calc(100vh - 280px)',
+          height: '100%',
           overflowY: 'auto',
         }}>
 
@@ -245,11 +264,32 @@ function BigEventCard({ event }) {
             </div>
           )}
 
-          {/* Coordinator toggle */}
-          <button
-            onClick={() => setOpen(o => !o)}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 8,
+          {/* Action Buttons */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <a
+              href="#"
+              onClick={(e) => { e.preventDefault(); alert('Registration will open shortly via Google Forms!'); }}
+              style={{
+                display: 'block', textAlign: 'center',
+                background: 'rgba(255,255,255,0.85)',
+                color: '#000',
+                borderRadius: 12, padding: '12px 20px',
+                fontFamily: 'Enbora', fontSize: 14, fontWeight: 700,
+                textDecoration: 'none',
+                transition: 'all 0.2s ease',
+                letterSpacing: '0.05em',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.transform = 'scale(1.02)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.85)'; e.currentTarget.style.transform = 'scale(1)'; }}
+            >
+              Register Now
+            </a>
+
+            {/* Coordinator toggle */}
+            <button
+              onClick={() => setOpen(o => !o)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 8,
               background: open ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.04)',
               border: '1px solid rgba(255,255,255,0.2)',
               borderRadius: 12, padding: '12px 20px',
@@ -360,6 +400,7 @@ function BigEventCard({ event }) {
               </motion.div>
             )}
           </AnimatePresence>
+          </div>
         </div>
 
         {/* Long arc orbit line — 3/4 card width, rotating */}
@@ -412,6 +453,23 @@ function BigEventCard({ event }) {
 }
 
 export default function TechnicalEvents() {
+  const [activeKey, setActiveKey] = useState(() => getBreakpointKey(typeof window !== 'undefined' ? window.innerWidth : 1200));
+
+  useEffect(() => {
+    const update = () => setActiveKey(getBreakpointKey(window.innerWidth));
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
+  const bp = MODEL_BREAKPOINTS[activeKey];
+  const modelConfig = {
+    pos: bp.pos,
+    rot: bp.rot,
+    scale: bp.scale,
+    speed: 0.6,
+    visible: true,
+  };
+
   return (
     <div style={{ position: 'relative' }}>
       <div style={{
@@ -421,14 +479,12 @@ export default function TechnicalEvents() {
       }}>
         {/* Background is transparent to show global Starfield */}
 
-        <Suspense fallback={null}>
-          <ModelCanvas
-            path="/model_glb/blackhole.glb"
-            config={BLACKHOLE_CONFIG}
-            fov={38}
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 1, opacity: 0.92 }}
-          />
-        </Suspense>
+        <ModelCanvas
+          path="/model_glb/blackhole.glb"
+          config={modelConfig}
+          fov={38}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 1, opacity: 0.92 }}
+        />
 
         {/* Subtle white/silver nebula — no green */}
         <motion.div
@@ -462,8 +518,7 @@ export default function TechnicalEvents() {
           top: NAV_HEIGHT,
           zIndex: 10,
           padding: '20px clamp(24px, 5vw, 80px) 16px',
-          background: 'linear-gradient(180deg, rgba(4,5,14,0.98) 75%, rgba(4,5,14,0) 100%)',
-          backdropFilter: 'blur(6px)',
+          background: 'transparent',
           pointerEvents: 'none',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>

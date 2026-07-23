@@ -1,18 +1,37 @@
-import { motion } from 'framer-motion';
-import { lazy, Suspense } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
 
-const ModelCanvas = lazy(() => import('./ModelCanvas'));
+import ModelCanvas from './ModelCanvas';
 
-const MAN_CONFIG = {
-  pos: [0.5, -1.8, -1],
-  rot: [0.01, 0.4, 0],
-  scale: 1.5,
-  speed: 0.3,
-  visible: true,
-  autoRotate: false,
-  animate: true,
-  interactable: true,
+const MODEL_BREAKPOINTS = {
+  desktop: {
+    scale: 1.5,
+    pos: [0.5, -1.8, -1],
+    rot: [0.01, 0.4, 0],
+  },
+  tablet: {
+    scale: 1.2,
+    pos: [0.3, -1.5, -1],
+    rot: [0.01, 0.4, 0],
+  },
+  mobile: {
+    scale: 0.9,
+    pos: [0, -1.2, -1],
+    rot: [0.01, 0.3, 0],
+  },
+  mobileSmall: {
+    scale: 2,
+    pos: [0, -1.9, -1],
+    rot: [0.01, 0.3, 0],
+  },
 };
+
+function getBreakpointKey(width) {
+  if (width <= 480) return 'mobileSmall';
+  if (width < 768)  return 'mobile';
+  if (width < 1024) return 'tablet';
+  return 'desktop';
+}
 
 const PILLARS = [
   {
@@ -53,9 +72,63 @@ const PILLARS = [
  * while content animates in.
  */
 export default function About() {
+  const [activeKey, setActiveKey] = useState(() => getBreakpointKey(typeof window !== 'undefined' ? window.innerWidth : 1200));
+
+  useEffect(() => {
+    const update = () => setActiveKey(getBreakpointKey(window.innerWidth));
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
+  const bp = MODEL_BREAKPOINTS[activeKey];
+  const modelConfig = {
+    pos: bp.pos,
+    rot: bp.rot,
+    scale: bp.scale,
+    speed: 1.0,
+    visible: true,
+    autoRotate: false,
+    animate: true,
+    interactable: true,
+    float: false,
+    floatSpeed: 0.45,
+    floatAmplitude: 0.08,
+    sway: true,
+    swaySpeed: 0.3,
+    swayAmplitude: 0.025,
+  };
+
+  const containerRef = useRef(null);
+  const isInView = useInView(containerRef, { amount: 0.3, once: true });
+
+  useEffect(() => {
+    if (isInView) {
+      // Use window object to prevent duplicate plays during React HMR or strict mode double-renders
+      if (!window.__aboutAudioPlayed) {
+        window.__aboutAudioPlayed = true;
+        const audio = new Audio('/audio/man_sppech.mp3');
+        audio.volume = 0.8; // Set volume to 80% to be present but not deafening
+        
+        // Duck the global background audio to make speech clear
+        if (window.__bgAudio) {
+          window.__bgAudio.volume = 0.08; // Mild volume
+        }
+
+        audio.play().catch(e => console.warn('Audio playback blocked by browser:', e));
+
+        // Restore global background audio when speech finishes
+        audio.addEventListener('ended', () => {
+          if (window.__bgAudio) {
+            window.__bgAudio.volume = 0.4; // Normal ambient volume
+          }
+        });
+      }
+    }
+  }, [isInView]);
+
   return (
     /* ── Full height section wrapper ── */
-    <div style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden' }}>
+    <div ref={containerRef} style={{ position: 'relative', minHeight: '100vh', overflow: 'visible' }}>
       {/* Background is transparent to show global Starfield */}
 
       {/* ── Floating gradient blobs (from Hero) ── */}
@@ -89,19 +162,20 @@ export default function About() {
       />
 
       {/* 3D Astronaut model */}
-      <Suspense fallback={null}>
-        <ModelCanvas
-          path="/model_glb/man.glb"
-          config={MAN_CONFIG}
-          fov={42}
-          style={{
-            position: 'absolute',
-            top: 0, left: 0, /* MOVED TO LEFT */
-            width: '45%', height: '100%',
-            zIndex: 1, opacity: 0.95, /* slightly more opaque to pop */
-          }}
-        />
-      </Suspense>
+      <ModelCanvas
+        path="/model_glb/man.glb"
+        config={modelConfig}
+        fov={42}
+        style={{
+          position: 'absolute',
+          top: (activeKey === 'mobile' || activeKey === 'mobileSmall') ? '0' : '-10%',
+          left: 0,
+          width: (activeKey === 'mobile' || activeKey === 'mobileSmall') ? '100%' : '45%',
+          height: (activeKey === 'mobile' || activeKey === 'mobileSmall') ? '55vh' : '120%',
+          zIndex: 1, 
+          opacity: 0.95,
+        }}
+      />
 
       {/* Content — animates in on scroll */}
       <motion.div
@@ -112,10 +186,13 @@ export default function About() {
         style={{
           position: 'relative', zIndex: 2,
           maxWidth: 1200, margin: '0 auto',
-          padding: 'clamp(120px, 15vh, 160px) clamp(24px, 6vw, 96px) 100px', /* Increased padding for better breathing room */
+          padding: (activeKey === 'mobile' || activeKey === 'mobileSmall')
+            ? 'clamp(48vh, 52vh, 58vh) clamp(16px, 5vw, 48px) 60px'
+            : 'clamp(120px, 15vh, 160px) clamp(24px, 6vw, 96px) 100px',
           minHeight: '100vh',
-          display: 'flex', alignItems: 'center', /* Center vertically since it can expand now */
-          justifyContent: 'flex-end', /* PUSH ENTIRE CONTAINER TO RIGHT */
+          display: 'flex',
+          alignItems: (activeKey === 'mobile' || activeKey === 'mobileSmall') ? 'flex-start' : 'center',
+          justifyContent: 'flex-end',
         }}
       >
         <div style={{

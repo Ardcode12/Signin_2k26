@@ -1,25 +1,43 @@
-import { lazy, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Phone } from 'lucide-react';
 
-const ModelCanvas = lazy(() => import('./ModelCanvas'));
+import ModelCanvas from './ModelCanvas';
 
-const NAV_HEIGHT    = 72;
-const HEADER_HEIGHT = 118;
-const STACK_OFFSET  = 28;
-const CARD_DWELL    = '60vh';
-
-const BLACKHOLE_CONFIG = {
-  pos: [-3.5, -0.5, -4],
-  rot: [0.3, 0.9, 0],
-  scale: 1.3,
-  speed: 0.55,
-  visible: true,
+const MODEL_BREAKPOINTS = {
+  desktop: {
+    pos: [-4.5, -0.5, -4],
+    rot: [0.3, 0.9, 0],
+    scale: 1.3,
+  },
+  tablet: {
+    pos: [-3.5, 0, -4],
+    rot: [0.3, 0.9, 0],
+    scale: 1.1,
+  },
   mobile: {
-    pos: [0, -2, -3],
-    scale: 1.05,
-  }
+    pos: [0, -2, -4],
+    rot: [0.3, 0.9, 0],
+    scale: 0.9,
+  },
+  mobileSmall: {
+    pos: [-1.5, 0.7, -3.5],
+    rot: [0.3, 0.9, 0],
+    scale: 0.8,
+  },
 };
+
+function getBreakpointKey(width) {
+  if (width <= 480) return 'mobileSmall';
+  if (width < 768)  return 'mobile';
+  if (width < 1024) return 'tablet';
+  return 'desktop';
+}
+
+const NAV_HEIGHT = 72;
+const HEADER_HEIGHT = 118;
+const STACK_OFFSET = 28;
+const CARD_DWELL = '60vh';
 
 const COORDINATORS = [
   {
@@ -47,13 +65,13 @@ const COORDINATORS = [
 
 /* Fixed star positions inside card */
 const STARS = [
-  { x:  8, y: 18, s: 1.5 }, { x: 23, y: 70, s: 1   },
-  { x: 40, y: 30, s: 2   }, { x: 56, y: 62, s: 1   },
-  { x: 72, y: 15, s: 1.5 }, { x: 88, y: 78, s: 1   },
-  { x: 15, y: 52, s: 1   }, { x: 48, y: 88, s: 1.5 },
-  { x: 64, y: 42, s: 2   }, { x: 91, y: 33, s: 1   },
-  { x: 32, y: 90, s: 1   }, { x: 79, y: 55, s: 1.5 },
-  { x:  5, y: 38, s: 1   }, { x: 95, y: 65, s: 1   },
+  { x: 8, y: 18, s: 1.5 }, { x: 23, y: 70, s: 1 },
+  { x: 40, y: 30, s: 2 }, { x: 56, y: 62, s: 1 },
+  { x: 72, y: 15, s: 1.5 }, { x: 88, y: 78, s: 1 },
+  { x: 15, y: 52, s: 1 }, { x: 48, y: 88, s: 1.5 },
+  { x: 64, y: 42, s: 2 }, { x: 91, y: 33, s: 1 },
+  { x: 32, y: 90, s: 1 }, { x: 79, y: 55, s: 1.5 },
+  { x: 5, y: 38, s: 1 }, { x: 95, y: 65, s: 1 },
 ];
 
 /* ──────────────────────────────────────────────────────────
@@ -197,7 +215,7 @@ function CoordinatorCard({ person }) {
             style={{
               position: 'absolute',
               left: `${star.x}%`,
-              top:  `${star.y}%`,
+              top: `${star.y}%`,
               width: star.s,
               height: star.s,
               background: '#fff',
@@ -224,11 +242,11 @@ function CoordinatorCard({ person }) {
 
         {/* Card body */}
         <div className="custom-scrollbar" style={{
-        padding: '32px 32px 40px',
-        position: 'relative', zIndex: 2,
-        maxHeight: 'calc(100vh - 280px)',
-        overflowY: 'auto',
-      }}>
+          padding: '32px 32px 40px',
+          position: 'relative', zIndex: 2,
+          maxHeight: 'calc(100vh - 280px)',
+          overflowY: 'auto',
+        }}>
 
           {/* Large number + role badge */}
           <div style={{
@@ -380,6 +398,23 @@ function CoordinatorCard({ person }) {
    SECTION
    ────────────────────────────────────────────────────────── */
 export default function Coordinators() {
+  const [activeKey, setActiveKey] = useState(() => getBreakpointKey(typeof window !== 'undefined' ? window.innerWidth : 1200));
+
+  useEffect(() => {
+    const update = () => setActiveKey(getBreakpointKey(window.innerWidth));
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
+  const bp = MODEL_BREAKPOINTS[activeKey];
+  const modelConfig = {
+    pos: bp.pos,
+    rot: bp.rot,
+    scale: bp.scale,
+    speed: 0.55,
+    visible: true,
+  };
+
   return (
     <div style={{ position: 'relative' }}>
 
@@ -389,18 +424,16 @@ export default function Coordinators() {
         height: '100vh', overflow: 'hidden',
         zIndex: 0, pointerEvents: 'none',
       }}>
-        <Suspense fallback={null}>
-          <ModelCanvas
-            path="/model_glb/blackhole.glb"
-            config={BLACKHOLE_CONFIG}
-            fov={38}
-            style={{
-              position: 'absolute', inset: 0,
-              width: '100%', height: '100%',
-              zIndex: 1, opacity: 0.9,
-            }}
-          />
-        </Suspense>
+        <ModelCanvas
+          path="/model_glb/blackhole.glb"
+          config={modelConfig}
+          fov={38}
+          style={{
+            position: 'absolute', inset: 0,
+            width: '100%', height: '100%',
+            zIndex: 1, opacity: 0.9,
+          }}
+        />
 
         {/* Subtle white nebula blobs — no green */}
         <motion.div
@@ -438,8 +471,7 @@ export default function Coordinators() {
           top: NAV_HEIGHT,
           zIndex: 10,
           padding: '20px clamp(24px, 5vw, 80px) 16px',
-          background: 'linear-gradient(180deg, rgba(4,5,14,0.98) 75%, rgba(4,5,14,0) 100%)',
-          backdropFilter: 'blur(6px)',
+          background: 'transparent',
           pointerEvents: 'none',
           display: 'flex',
           flexDirection: 'column',

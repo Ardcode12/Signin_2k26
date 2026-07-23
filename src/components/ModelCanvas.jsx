@@ -1,128 +1,257 @@
-import { useRef, Suspense, Component, useState, useEffect } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { useGLTF, useAnimations, OrbitControls } from '@react-three/drei';
-import { SkeletonUtils } from 'three-stdlib';
+import { useRef, useEffect, Component } from 'react';
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 
-/* ─── Error boundary so a broken model never blacks out the page ─── */
+/* ─── Draco decoder (for blackhole.glb which is still Draco-compressed) ─── */
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+dracoLoader.preload();
+
+/* ─── Shared GLTF loader — supports BOTH Draco + Meshopt ─── */
+const gltfLoader = new GLTFLoader();
+gltfLoader.setDRACOLoader(dracoLoader);
+gltfLoader.setMeshoptDecoder(MeshoptDecoder);
+
+/* ─── In-memory cache: each model downloads only once ─── */
+const modelCache = new Map();
+function loadModel(path) {
+  if (modelCache.has(path)) return Promise.resolve(modelCache.get(path));
+  return new Promise((resolve, reject) => {
+    gltfLoader.load(path, (gltf) => { modelCache.set(path, gltf); resolve(gltf); }, undefined, reject);
+  });
+}
+
+/* ─── Error boundary so a broken model never crashes the page ─── */
 class CanvasErrorBoundary extends Component {
   constructor(props) { super(props); this.state = { error: false }; }
   static getDerivedStateFromError() { return { error: true }; }
-  render() {
-    if (this.state.error) return null; // silent fail — model just disappears
-    return this.props.children;
-  }
+  render() { return this.state.error ? null : this.props.children; }
 }
 
 /**
- * Animated GLB model — handles auto-spin and embedded GLB animations.
+ * ╔══════════════════════════════════════════════════════════════════╗
+ * ║  ModelCanvas — Advanced Animation Config                        ║
+ * ║                                                                  ║
+ * ║  config object supports:                                         ║
+ * ║    pos:              [x, y, z]  — base position                 ║
+ * ║    rot:              [x, y, z]  — base rotation (radians)       ║
+ * ║    scale:            number     — uniform scale                  ║
+ * ║    visible:          bool       — show/hide                      ║
+ * ║    animate:          bool       — play GLB animations            ║
+ * ║    speed:            number     — GLB animation speed multiplier ║
+ * ║                                                                  ║
+ * ║  ── Float (vertical bobbing) ──                                  ║
+ * ║    float:            bool       — enable floating                ║
+ * ║    floatSpeed:       number     — cycles per second (def: 0.6)   ║
+ * ║    floatAmplitude:   number     — units of travel (def: 0.12)    ║
+ * ║                                                                  ║
+ * ║  ── Sway (subtle side-to-side roll) ──                           ║
+ * ║    sway:             bool       — enable swaying                 ║
+ * ║    swaySpeed:        number     — cycles per second (def: 0.4)   ║
+ * ║    swayAmplitude:    number     — radians of tilt  (def: 0.04)   ║
+ * ║                                                                  ║
+ * ║  ── Auto-rotate (continuous Y-spin) ──                           ║
+ * ║    autoRotate:       bool       — enable spinning                ║
+ * ║    autoRotateSpeed:  number     — radians per second (def: 0.5)  ║
+ * ║    autoRotateAxis:   'x'|'y'|'z' — axis to spin on (def: 'y')   ║
+ * ║                                                                  ║
+ * ║  ── Drift (slow XZ positional drift) ──                          ║
+ * ║    drift:            bool       — enable positional drift        ║
+ * ║    driftSpeed:       number     — cycles per second (def: 0.25)  ║
+ * ║    driftAmplitude:   number     — units of XZ drift (def: 0.08)  ║
+ * ╚══════════════════════════════════════════════════════════════════╝
  */
-function GLBModel({ path, config }) {
-  const { scene, animations } = useGLTF(path);
+function ThreeModel({ path, config, style = {}, fov = 35 }) {
+  const containerRef = useRef(null);
 
-  // SkeletonUtils.clone properly deep-clones skinned meshes with their
-  // bone references intact — unlike scene.clone() which breaks the skeleton
-  // that useAnimations binds its AnimationMixer to.
-  const clonedScene = useRef(null);
-  if (!clonedScene.current) {
-    clonedScene.current = SkeletonUtils.clone(scene);
-  }
+  /* Destructure into primitives so useEffect re-runs on any change */
+  const [px, py, pz]  = config.pos  ?? [0, 0, 0];
+  const [rx, ry, rz]  = config.rot  ?? [0, 0, 0];
+  const sc   = config.scale   ?? 1;
+  const spd  = config.speed   ?? 1;
+  const anim = config.animate !== false;
 
-  const ref = useRef();
-  const { actions } = useAnimations(animations, ref);
+  /* Float */
+  const doFloat   = !!config.float;
+  const floatSpd  = config.floatSpeed     ?? 0.6;
+  const floatAmp  = config.floatAmplitude ?? 0.12;
 
-  // Handle built-in GLB animations (like walking/floating)
+  /* Sway */
+  const doSway    = !!config.sway;
+  const swaySpd   = config.swaySpeed      ?? 0.4;
+  const swayAmp   = config.swayAmplitude  ?? 0.04;
+
+  /* Auto-rotate */
+  const doSpin    = !!config.autoRotate;
+  const spinSpd   = config.autoRotateSpeed ?? 0.5;
+  const spinAxis  = config.autoRotateAxis  ?? 'y';
+
+  /* Drift */
+  const doDrift   = !!config.drift;
+  const driftSpd  = config.driftSpeed     ?? 0.25;
+  const driftAmp  = config.driftAmplitude ?? 0.08;
+
   useEffect(() => {
-    if (!actions) return;
-    const names = Object.keys(actions);
-    if (names.length === 0) return;
+    const container = containerRef.current;
+    if (!container) return;
 
-    // Play / stop ALL tracks so multi-clip models work correctly
-    names.forEach((name) => {
-      if (config.animate !== false) {
-        actions[name].reset().play();
-      } else {
-        actions[name].stop();
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const w = container.clientWidth  || 600;
+    const h = container.clientHeight || 600;
+
+    /* ── Scene ── */
+    const scene  = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(fov, w / h, 0.1, 100);
+    camera.position.set(0, 0, 6);
+    camera.lookAt(0, 0, 0);
+
+    /* ── Renderer ── */
+    const renderer = new THREE.WebGLRenderer({
+      antialias: !isMobile,
+      alpha: true,
+      powerPreference: 'high-performance',
+    });
+    renderer.setClearColor(0x000000, 0);
+    renderer.setSize(w, h);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
+    container.appendChild(renderer.domElement);
+
+    /* ── Lights ── */
+    scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+    const key = new THREE.DirectionalLight(0xffffff, 1.6);
+    key.position.set(5, 8, 5);
+    scene.add(key);
+    const fill = new THREE.DirectionalLight(0xaaccff, 0.4);
+    fill.position.set(-4, -2, -4);
+    scene.add(fill);
+    const pt = new THREE.PointLight(0xffffff, 0.8);
+    pt.position.set(0, 4, 2);
+    scene.add(pt);
+
+    /* ── Load model ── */
+    let mixer    = null;
+    let rafId    = null;
+    let disposed = false;
+    let wrapper  = null;  // outer Group — receives our procedural transforms
+    const clock  = new THREE.Clock();
+    let elapsed  = 0;
+
+    loadModel(path).then((gltf) => {
+      if (disposed) return;
+
+      /* Outer wrapper: OUR position / rotation / scale live here */
+      wrapper = new THREE.Group();
+      wrapper.position.set(px, py, pz);
+      wrapper.rotation.set(rx, ry, rz);
+      wrapper.scale.setScalar(sc);
+      scene.add(wrapper);
+
+      /* Inner model: SkeletonUtils.clone properly remaps bones for AnimationMixer */
+      const modelScene = SkeletonUtils.clone(gltf.scene);
+      wrapper.add(modelScene);
+
+      if (anim && gltf.animations?.length > 0) {
+        /* Bind mixer to inner modelScene — never to wrapper */
+        mixer = new THREE.AnimationMixer(modelScene);
+        gltf.animations.forEach((clip) => {
+          const action = mixer.clipAction(clip);
+          action.reset();
+          action.setEffectiveTimeScale(1);
+          action.setEffectiveWeight(1);
+          action.play();
+        });
       }
+    }).catch((err) => {
+      console.warn('[ModelCanvas] Load error:', err?.message ?? err);
     });
 
-    return () => {
-      // Cleanup: stop all on unmount or when animate flag changes
-      names.forEach((name) => actions[name]?.stop());
-    };
-  }, [actions, config.animate]);
+    /* ── Render loop with advanced animations ── */
+    function animateLoop() {
+      rafId = requestAnimationFrame(animateLoop);
+      const delta = clock.getDelta();
+      elapsed += delta;
 
-  // Handle custom Y-axis auto-rotation
-  useFrame((_, delta) => {
-    if (ref.current && config.autoRotate !== false && config.speed > 0) {
-      ref.current.rotation.y += delta * config.speed;
+      /* GLB embedded animation — affects INNER modelScene only */
+      if (mixer) mixer.update(delta * spd);
+
+      /* Procedural animations — applied to WRAPPER GROUP only */
+      if (wrapper) {
+        const floatOffset = doFloat
+          ? Math.sin(elapsed * floatSpd * Math.PI * 2) * floatAmp
+          : 0;
+
+        const driftX = doDrift
+          ? Math.sin(elapsed * driftSpd * Math.PI * 2) * driftAmp
+          : 0;
+        const driftZ = doDrift
+          ? Math.sin(elapsed * driftSpd * Math.PI * 2 * 0.7) * driftAmp * 0.5
+          : 0;
+
+        wrapper.position.set(px + driftX, py + floatOffset, pz + driftZ);
+
+        const swayOffset = doSway
+          ? Math.sin(elapsed * swaySpd * Math.PI * 2) * swayAmp
+          : 0;
+
+        const spinOffset = doSpin ? elapsed * spinSpd : 0;
+
+        wrapper.rotation.set(
+          rx + (spinAxis === 'x' ? spinOffset : 0),
+          ry + (spinAxis === 'y' ? spinOffset : 0),
+          rz + (spinAxis === 'z' ? spinOffset : 0) + swayOffset
+        );
+      }
+
+      renderer.render(scene, camera);
     }
-  });
+    animateLoop();
 
-  return (
-    <primitive
-      ref={ref}
-      object={clonedScene.current}
-      position={config.pos}
-      rotation={config.rot}
-      scale={config.scale}
-    />
-  );
+    /* ── Resize ── */
+    const onResize = () => {
+      const nw = container.clientWidth  || 600;
+      const nh = container.clientHeight || 600;
+      camera.aspect = nw / nh;
+      camera.updateProjectionMatrix();
+      renderer.setSize(nw, nh);
+    };
+    window.addEventListener('resize', onResize);
+
+    /* ── Cleanup ── */
+    return () => {
+      disposed = true;
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('resize', onResize);
+      renderer.dispose();
+      if (container.contains(renderer.domElement)) {
+        container.removeChild(renderer.domElement);
+      }
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [path, px, py, pz, rx, ry, rz, sc, spd, anim,
+      doFloat, floatSpd, floatAmp,
+      doSway, swaySpd, swayAmp,
+      doSpin, spinSpd, spinAxis,
+      doDrift, driftSpd, driftAmp,
+      fov]);
+
+  return <div ref={containerRef} style={{ width: '100%', height: '100%', ...style }} />;
 }
 
-/**
- * Renders a single GLB inside a transparent Canvas overlay.
- *
- * Props:
- *   path   — public path to .glb
- *   config — { pos, rot, scale, speed, visible }
- *   style  — inline style for the wrapper div (position, size, etc.)
- *   fov    — camera field of view (default 40)
- */
-export default function ModelCanvas({ path, config, style = {}, fov = 40 }) {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const mql = window.matchMedia('(max-width: 768px)');
-    setIsMobile(mql.matches);
-    const handler = (e) => setIsMobile(e.matches);
-    mql.addEventListener('change', handler);
-    return () => mql.removeEventListener('change', handler);
-  }, []);
-
+export default function ModelCanvas({ path, config, style = {}, fov = 35 }) {
   if (!config?.visible) return null;
-  
-  // Merge mobile overrides if they exist
-  const activeConfig = { ...config, ...(isMobile && config.mobile ? config.mobile : {}) };
+
+  const isMobile = typeof window !== 'undefined' &&
+    window.matchMedia('(max-width: 768px)').matches;
+  const activeConfig = (isMobile && config.mobile)
+    ? { ...config, ...config.mobile }
+    : config;
 
   return (
     <CanvasErrorBoundary>
-      <div
-        style={{
-          pointerEvents: activeConfig.interactable ? 'auto' : 'none',
-          ...style,
-        }}
-      >
-        <Canvas
-          camera={{ position: [0, 0, 6], fov: isMobile ? fov + 10 : fov }}
-          dpr={[1, 1.5]} // Limit pixel ratio to 1.5 to save RAM/GPU on mobile
-          gl={{ alpha: true, antialias: !isMobile, powerPreference: 'low-power' }}
-          style={{ background: 'transparent' }}
-          onCreated={({ gl }) => {
-            gl.setClearColor(0x000000, 0); // fully transparent background
-          }}
-        >
-          <ambientLight intensity={0.8} />
-          <directionalLight position={[5, 8, 5]} intensity={1.6} color="#ffffff" />
-          <directionalLight position={[-4, -2, -4]} intensity={0.4} color="#aaccff" />
-          <pointLight position={[0, 4, 2]} intensity={0.8} color="#ffffff" />
-          <Suspense fallback={null}>
-            <GLBModel path={path} config={activeConfig} />
-          </Suspense>
-          {activeConfig.interactable && (
-            <OrbitControls enableZoom={false} enablePan={false} />
-          )}
-        </Canvas>
-      </div>
+      <ThreeModel path={path} config={activeConfig} style={style} fov={fov} />
     </CanvasErrorBoundary>
   );
 }

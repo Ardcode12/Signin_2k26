@@ -283,30 +283,70 @@ export default function Footer({ onNavigate }) {
             borderTop: '1px solid rgba(255,255,255,0.06)',
             padding: '28px 0 32px',
             display: 'flex',
+            flexDirection: 'column',
+            gap: 24,
+          }}
+        >
+          <div style={{
+            display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             flexWrap: 'wrap',
             gap: 16,
-          }}
-        >
-          <p style={{
-            fontFamily: 'Enbora',
-            fontSize: 13,
-            color: 'rgba(255,255,255,0.3)',
           }}>
-            © {currentYear} Siginin'26. All rights reserved across the galaxy.
-          </p>
+            <p style={{
+              fontFamily: 'Enbora',
+              fontSize: 13,
+              color: 'rgba(255,255,255,0.3)',
+            }}>
+              © {currentYear} Siginin'26. All rights reserved across the galaxy.
+            </p>
 
-          {/* Closing space tagline */}
-          <p style={{
-            fontFamily: 'Enbora',
-            fontSize: 13,
-            color: 'rgba(255,255,255,0.3)',
-            fontStyle: 'italic',
-            textAlign: 'right',
+            {/* Closing space tagline */}
+            <p style={{
+              fontFamily: 'Enbora',
+              fontSize: 13,
+              color: 'rgba(255,255,255,0.3)',
+              fontStyle: 'italic',
+              textAlign: 'right',
+            }}>
+              "The cosmos is within us. We are made of star-stuff." — Carl Sagan
+            </p>
+          </div>
+
+          {/* Web Team Credits */}
+          <div style={{
+            borderTop: '1px dashed rgba(255,255,255,0.1)',
+            paddingTop: 24,
+            textAlign: 'center',
           }}>
-            "The cosmos is within us. We are made of star-stuff." — Carl Sagan
-          </p>
+            <p style={{
+              fontFamily: 'Orbitron',
+              fontSize: 11,
+              color: 'rgba(255,255,255,0.4)',
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
+              marginBottom: 12,
+            }}>
+              Developed by Web Team - IT Association, Kongu Engineering College
+            </p>
+            <div style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              gap: 16,
+              fontFamily: 'Enbora',
+              fontSize: 13,
+              color: 'rgba(255,255,255,0.6)',
+            }}>
+              {['Arnald S', 'MohanRaja', 'Soundhar Hari', 'Sesanth'].map((name, i) => (
+                <span key={name} style={{ display: 'inline-flex', alignItems: 'center', gap: 16 }}>
+                  <span>{name}</span>
+                  {i !== 3 && <span style={{ color: 'rgba(255,255,255,0.2)' }}>•</span>}
+                </span>
+              ))}
+            </div>
+          </div>
         </motion.div>
 
         {/* Big watermark */}
@@ -314,6 +354,7 @@ export default function Footer({ onNavigate }) {
           textAlign: 'center',
           overflow: 'hidden',
           height: 120,
+          marginTop: 40,
           position: 'relative',
           pointerEvents: 'none',
         }}>
