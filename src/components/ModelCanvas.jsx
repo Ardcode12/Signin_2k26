@@ -139,6 +139,19 @@ function ThreeModel({ path, config, style = {}, fov = 35 }) {
     const clock  = new THREE.Clock();
     let elapsed  = 0;
 
+    /* ── Resize handler ── */
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        if (width && height) {
+          renderer.setSize(width, height);
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+        }
+      }
+    });
+    observer.observe(container);
+
     loadModel(path).then((gltf) => {
       if (disposed) return;
 
@@ -209,21 +222,11 @@ function ThreeModel({ path, config, style = {}, fov = 35 }) {
     }
     animateLoop();
 
-    /* ── Resize ── */
-    const onResize = () => {
-      const nw = container.clientWidth  || 600;
-      const nh = container.clientHeight || 600;
-      camera.aspect = nw / nh;
-      camera.updateProjectionMatrix();
-      renderer.setSize(nw, nh);
-    };
-    window.addEventListener('resize', onResize);
-
     /* ── Cleanup ── */
     return () => {
       disposed = true;
       cancelAnimationFrame(rafId);
-      window.removeEventListener('resize', onResize);
+      observer.disconnect();
       renderer.dispose();
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);

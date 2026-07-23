@@ -131,35 +131,33 @@ export default function About() {
     <div ref={containerRef} style={{ position: 'relative', minHeight: '100vh', overflow: 'visible' }}>
       {/* Background is transparent to show global Starfield */}
 
-      {/* ── Floating gradient blobs (from Hero) ── */}
-      <motion.div
-        animate={{ y: [0, -22, 0], x: [0, 10, 0] }}
-        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-        style={{
-          position: 'absolute',
-          width: 700, height: 700,
-          background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)',
-          top: '5%', right: '-10%',
-          borderRadius: '50%',
-          filter: 'blur(80px)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
-      <motion.div
-        animate={{ y: [0, 18, 0], x: [0, -8, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-        style={{
-          position: 'absolute',
-          width: 420, height: 420,
-          background: 'radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%)',
-          bottom: '5%', left: '-5%',
-          borderRadius: '50%',
-          filter: 'blur(70px)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
+      {/* ── Glowing background nebulas ── */}
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 0, pointerEvents: 'none' }}>
+        <motion.div
+          animate={{ y: [0, -22, 0], x: [0, 10, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          style={{
+            position: 'absolute',
+            width: 700, height: 700,
+            background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)',
+            top: '5%', right: '-10%',
+            borderRadius: '50%',
+            filter: 'blur(80px)',
+          }}
+        />
+        <motion.div
+          animate={{ y: [0, 18, 0], x: [0, -8, 0] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+          style={{
+            position: 'absolute',
+            width: 420, height: 420,
+            background: 'radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%)',
+            bottom: '5%', left: '-5%',
+            borderRadius: '50%',
+            filter: 'blur(70px)',
+          }}
+        />
+      </div>
 
       {/* 3D Astronaut model */}
       <ModelCanvas

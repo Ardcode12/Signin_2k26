@@ -421,7 +421,7 @@ export default function Coordinators() {
       {/* ── STICKY BACKGROUND ── */}
       <div style={{
         position: 'sticky', top: 0,
-        height: '100vh', overflow: 'hidden',
+        height: '100vh', overflow: 'visible',
         zIndex: 0, pointerEvents: 'none',
       }}>
         <ModelCanvas
@@ -436,30 +436,32 @@ export default function Coordinators() {
         />
 
         {/* Subtle white nebula blobs — no green */}
-        <motion.div
-          animate={{ y: [0, -20, 0] }}
-          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-          style={{
-            position: 'absolute',
-            width: 700, height: 700,
-            background: 'radial-gradient(circle, rgba(255,255,255,0.035) 0%, transparent 68%)',
-            top: '5%', left: '-18%',
-            borderRadius: '50%',
-            filter: 'blur(90px)', pointerEvents: 'none', zIndex: 0,
-          }}
-        />
-        <motion.div
-          animate={{ y: [0, 22, 0] }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
-          style={{
-            position: 'absolute',
-            width: 400, height: 400,
-            background: 'radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%)',
-            bottom: '8%', right: '-5%',
-            borderRadius: '50%',
-            filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0,
-          }}
-        />
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+          <motion.div
+            animate={{ y: [0, -20, 0] }}
+            transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+            style={{
+              position: 'absolute',
+              width: 700, height: 700,
+              background: 'radial-gradient(circle, rgba(255,255,255,0.035) 0%, transparent 68%)',
+              top: '5%', left: '-18%',
+              borderRadius: '50%',
+              filter: 'blur(90px)', pointerEvents: 'none', zIndex: 0,
+            }}
+          />
+          <motion.div
+            animate={{ y: [0, 22, 0] }}
+            transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
+            style={{
+              position: 'absolute',
+              width: 400, height: 400,
+              background: 'radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%)',
+              bottom: '8%', right: '-5%',
+              borderRadius: '50%',
+              filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0,
+            }}
+          />
+        </div>
       </div>
 
       {/* ── CONTENT ── */}

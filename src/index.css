@@ -64,7 +64,6 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
-  overflow-x: hidden;
 }
 
 body {
@@ -75,7 +74,6 @@ body {
   background-attachment: fixed;
   background-color: #020309;
   color: var(--text-primary);
-  overflow-x: hidden;
   cursor: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

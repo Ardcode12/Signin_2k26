@@ -86,35 +86,33 @@ export default function Footer({ onNavigate }) {
         zIndex: 0,
       }} />
 
-      {/* ── Floating gradient blobs (from Hero) ── */}
-      <motion.div
-        animate={{ y: [0, -22, 0], x: [0, 10, 0] }}
-        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-        style={{
-          position: 'absolute',
-          width: 700, height: 700,
-          background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)',
-          top: '5%', right: '-10%',
-          borderRadius: '50%',
-          filter: 'blur(80px)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
-      <motion.div
-        animate={{ y: [0, 18, 0], x: [0, -8, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-        style={{
-          position: 'absolute',
-          width: 420, height: 420,
-          background: 'radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%)',
-          bottom: '5%', left: '-5%',
-          borderRadius: '50%',
-          filter: 'blur(70px)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
+      {/* Glowing background nebulas */}
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 0, pointerEvents: 'none' }}>
+        <motion.div
+          animate={{ y: [0, -22, 0], x: [0, 10, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          style={{
+            position: 'absolute',
+            width: 700, height: 700,
+            background: 'radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%)',
+            top: '5%', right: '-10%',
+            borderRadius: '50%',
+            filter: 'blur(80px)',
+          }}
+        />
+        <motion.div
+          animate={{ y: [0, 18, 0], x: [0, -8, 0] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+          style={{
+            position: 'absolute',
+            width: 420, height: 420,
+            background: 'radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%)',
+            bottom: '15%', left: '-5%',
+            borderRadius: '50%',
+            filter: 'blur(70px)',
+          }}
+        />
+      </div>
 
       <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         {/* Top section */}
@@ -363,7 +361,7 @@ export default function Footer({ onNavigate }) {
             fontSize: 'clamp(4rem, 12vw, 8rem)',
             fontWeight: 900,
             letterSpacing: '-0.02em',
-            background: 'linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%)',
+            background: 'linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',

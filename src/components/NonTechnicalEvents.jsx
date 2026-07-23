@@ -383,30 +383,32 @@ export default function NonTechnicalEvents() {
       {/* ── STICKY BACKGROUND ── */}
       <div style={{
         position: 'sticky', top: 0,
-        height: '100vh', overflow: 'hidden',
+        height: '100vh', overflow: 'visible',
         zIndex: 0, pointerEvents: 'none',
       }}>
         {/* Subtle white nebula blobs — no green */}
-        <motion.div
-          animate={{ y: [0, -22, 0], x: [0, 10, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          style={{
-            position: 'absolute', width: 700, height: 700,
-            background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)',
-            top: '5%', right: '-10%', borderRadius: '50%',
-            filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0,
-          }}
-        />
-        <motion.div
-          animate={{ y: [0, 18, 0], x: [0, -8, 0] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-          style={{
-            position: 'absolute', width: 420, height: 420,
-            background: 'radial-gradient(circle, rgba(255,255,255,0.025) 0%, transparent 70%)',
-            bottom: '5%', left: '-5%', borderRadius: '50%',
-            filter: 'blur(70px)', pointerEvents: 'none', zIndex: 0,
-          }}
-        />
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+          <motion.div
+            animate={{ y: [0, -22, 0], x: [0, 10, 0] }}
+            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+            style={{
+              position: 'absolute', width: 700, height: 700,
+              background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)',
+              top: '5%', right: '-10%', borderRadius: '50%',
+              filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0,
+            }}
+          />
+          <motion.div
+            animate={{ y: [0, 18, 0], x: [0, -8, 0] }}
+            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+            style={{
+              position: 'absolute', width: 420, height: 420,
+              background: 'radial-gradient(circle, rgba(255,255,255,0.025) 0%, transparent 70%)',
+              bottom: '5%', left: '-5%', borderRadius: '50%',
+              filter: 'blur(70px)', pointerEvents: 'none', zIndex: 0,
+            }}
+          />
+        </div>
       </div>
 
       {/* ── CONTENT (Header + Cards) ── */}
